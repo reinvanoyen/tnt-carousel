@@ -2,44 +2,43 @@ var $ = require( 'jquery' );
 
 var Carousel = function( $element ) {
 	this.$element = $element;
+	this.$slides = this.$element.children();
+	this.amountOfSlides = this.$slides.size();
+	this.$images = this.$element.find( 'img' );
 	this.activeIndex = 0;
-	this.build();
+
+	if( this.$images.size() > 0 ) {
+		this.loadImages( this.build );
+	}
+	else {
+		this.build();
+	}
 };
 
 Carousel.prototype = {
 	build: function() {
+		this.$wrap =  this.$element.wrap( '<div>' ).parent();
 
-		var that = this;
+		this.$prevButton = $( '<button>' )
+			.addClass( 'carousel-prev-button' )
+			.appendTo( this.$wrap )
+		;
 
-		this.loadImages( function()
-		{
-			that.$wrap =  that.$element.wrap( '<div>' ).parent();
+		this.$nextButton = $( '<button>' )
+			.addClass( 'carousel-next-button' )
+			.appendTo( this.$wrap )
+		;
 
-			that.$prevButton = $( '<button>' )
-				.addClass( 'carousel-prev-button' )
-				.appendTo( that.$wrap )
-			;
+		this.$element.addClass( 'loaded' );
 
-			that.$nextButton = $( '<button>' )
-				.addClass( 'carousel-next-button' )
-				.appendTo( that.$wrap )
-			;
-
-			that.$element.addClass( 'loaded' );
-
-			that.$firstImage = that.$images.eq( 0 );
-			that.refresh();
-			that.bindEvents();
-		} );
+		this.$firstSlide = this.$slides.eq( 0 );
+		this.refresh();
+		this.bindEvents();
 	},
 	loadImages: function( callback ) {
 
-		this.$images = this.$element.find( 'img' );
-
-		this.amountOfSlides = this.$images.size();
-
 		var amountLoaded = 0,
-			amountToLoad = this.amountOfSlides;
+			amountToLoad = this.$images.size();
 
 		this.$images.each( function()
 		{
@@ -63,23 +62,19 @@ Carousel.prototype = {
 
 		var that = this;
 
-		$( window ).resize( function()
-		{
+		$( window ).resize( function() {
 			that.refresh();
 		} );
 
-		this.$nextButton.click( function()
-		{
+		this.$nextButton.click( function() {
 			that.next();
 		} );
 
-		this.$prevButton.click( function()
-		{
+		this.$prevButton.click( function() {
 			that.prev();
 		} );
 
-		$( document ).keydown( function( e )
-		{
+		$( document ).keydown( function( e ) {
 			if( e.keyCode == 37 )
 			{
 				that.prev();
@@ -119,13 +114,11 @@ Carousel.prototype = {
 		} );
 	},
 	processSwipeDistance: function( dist ) {
-		if( dist < 0 )
-		{
+		if( dist < 0 ) {
 			this.next();
 		}
 
-		if( dist > 0 )
-		{
+		if( dist > 0 ) {
 			this.prev();
 		}
 	},
@@ -136,7 +129,7 @@ Carousel.prototype = {
 
 		clearTimeout( this.timeout );
 
-		this.$element.children( 'li' ).attr( 'style', '' );
+		this.$slides.attr( 'style', '' );
 		this.$element.attr( 'style', '' );
 
 		this.elementWidth = this.$wrap.width();
@@ -145,8 +138,8 @@ Carousel.prototype = {
 			width: this.elementWidth
 		} );
 
-		this.slideWidth = this.$firstImage.width();
-		this.slideHeight = this.$firstImage.height();
+		this.slideWidth = this.$firstSlide[0].getBoundingClientRect().width;
+		this.slideHeight = this.$firstSlide[0].getBoundingClientRect().height;
 
 		this.$wrap.css( {
 			position: 'relative',
@@ -164,7 +157,7 @@ Carousel.prototype = {
 				width: that.totalWidth
 			} );
 
-			that.$element.children( 'li' ).css( {
+			that.$element.children().css( {
 				float: 'left',
 				width: that.slideWidth
 			} );
@@ -195,6 +188,7 @@ Carousel.prototype = {
 		this.slideTo( this.activeIndex - 1 );
 	},
 	slideTo: function( n ) {
+
 		var restSlides = this.amountOfSlides - n;
 
 		if( restSlides >= this.amountVisible && n >= 0 )

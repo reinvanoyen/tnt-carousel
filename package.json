@@ -27,6 +27,13 @@
   "_shasum": "a07d7d1315afe336d288a832274664d1f45711ce",
   "_from": "tnt-carousel@*",
   "devDependencies": {
-    "jquery": "^2.1.4"
+    "browserify": "^11.2.0",
+    "del": "^2.0.2",
+    "gulp": "^3.9.0",
+    "gulp-uglify": "^1.4.1",
+    "gulp-watch": "^4.3.5",
+    "jquery": "^2.1.4",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   }
 }

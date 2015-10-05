@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<title>tnt-carousel - demo</title>
+
+	<style>
+
+		*
+		{
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+		}
+
+		body
+		{
+			padding: 0;
+			margin: 0;
+			font-family: Sans-serif;
+		}
+
+		ul
+		{
+			padding: 0;
+			margin: 0;
+			overflow: hidden;
+			list-style: none;
+			transition: transform .3s linear;
+		}
+
+		ul li
+		{
+			float: left;
+			width: 25%;
+			height: 200px;
+			background-color: gray;
+		}
+
+		ul li:nth-child( 2 ) { background-color: blue; }
+		ul li:nth-child( 3 ) { background-color: darkblue; }
+		ul li:nth-child( 4 ) { background-color: black; }
+		ul li:nth-child( 5 ) { background-color: darkgreen; }
+		ul li:nth-child( 6 ) { background-color: green; }
+		ul li:nth-child( 7 ) { background-color: greenyellow; }
+
+		div
+		{
+			position: relative;
+		}
+
+		button
+		{
+			position: absolute;
+			top: 0;
+		}
+
+		.carousel-next-button
+		{
+			right: 0;
+		}
+
+		.carousel-prev-button
+		{
+			left: 0;
+		}
+
+	</style>
+
+</head>
+
+<body>
+
+	<ul>
+		<li>1</li>
+		<li>2</li>
+		<li>3</li>
+		<li>4</li>
+		<li>5</li>
+		<li>6</li>
+		<li>7</li>
+		<li>8</li>
+		<li>9</li>
+		<li>10</li>
+		<li>11</li>
+		<li>12</li>
+		<li>13</li>
+		<li>14</li>
+	</ul>
+
+	<script src="example-build.js"></script>
+
+</body>
+
+</html>
