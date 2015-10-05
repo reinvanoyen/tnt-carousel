@@ -6,6 +6,7 @@ $( document ).ready( function() {
 	var carousel1 = new Carousel( $( 'ul.no-images' ) );
 	var carousel2 = new Carousel( $( 'ul.images' ) );
 	var carousel3 = new Carousel( $( 'ul.padding' ) );
+	var carousel4 = new Carousel( $( '.example' ) );
 } );
 },{"../src/index.js":4,"jquery":2}],2:[function(require,module,exports){
 /*!

@@ -52,6 +52,15 @@ ul li img {
 div {
   position: relative; }
 
+div.example {
+  width: 50%;
+  overflow: hidden; }
+  div.example
+div {
+    width: 50%;
+    height: 150px;
+    background-color: green; }
+
 button {
   position: absolute;
   top: 0; }

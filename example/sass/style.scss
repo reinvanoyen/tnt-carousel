@@ -56,6 +56,19 @@ div
 	position: relative;
 }
 
+div.example
+{
+	width: 50%;
+	overflow: hidden;
+
+	div
+	{
+		width: 50%;
+		height: 150px;
+		background-color: green;
+	}
+}
+
 button
 {
 	position: absolute;
