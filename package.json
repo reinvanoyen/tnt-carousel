@@ -1,6 +1,6 @@
 {
   "name": "tnt-carousel",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Super simple carousel with touch support",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,10 @@
     "name": "Rein Van Oyen",
     "email": "rein@tnt.be",
     "url": "http://www.tnt.be"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bitbucket.org/tallieu/tnt-carousel.git"
   },
   "license": "ISC",
   "readme": "ERROR: No README data found!",
