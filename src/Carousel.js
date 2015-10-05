@@ -8,7 +8,10 @@ var Carousel = function( $element ) {
 	this.activeIndex = 0;
 
 	if( this.$images.size() > 0 ) {
-		this.loadImages( this.build );
+		var that = this;
+		this.loadImages( function() {
+			that.build();
+		} );
 	}
 	else {
 		this.build();
@@ -17,7 +20,7 @@ var Carousel = function( $element ) {
 
 Carousel.prototype = {
 	build: function() {
-		this.$wrap =  this.$element.wrap( '<div>' ).parent();
+		this.$wrap = this.$element.wrap( '<div>' ).parent();
 
 		this.$prevButton = $( '<button>' )
 			.addClass( 'carousel-prev-button' )

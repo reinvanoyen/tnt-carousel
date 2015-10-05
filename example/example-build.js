@@ -3,7 +3,8 @@ var $ = require( 'jquery' );
 var Carousel = require( '../src/index.js' );
 
 $( document ).ready( function() {
-	var carousel = new Carousel( $( 'ul' ) );
+	var carousel1 = new Carousel( $( 'ul.no-images' ) );
+	var carousel2 = new Carousel( $( 'ul.images' ) );
 } );
 },{"../src/index.js":4,"jquery":2}],2:[function(require,module,exports){
 /*!
@@ -9228,7 +9229,10 @@ var Carousel = function( $element ) {
 	this.activeIndex = 0;
 
 	if( this.$images.size() > 0 ) {
-		this.loadImages( this.build );
+		var that = this;
+		this.loadImages( function() {
+			that.build();
+		} );
 	}
 	else {
 		this.build();
@@ -9237,7 +9241,7 @@ var Carousel = function( $element ) {
 
 Carousel.prototype = {
 	build: function() {
-		this.$wrap =  this.$element.wrap( '<div>' ).parent();
+		this.$wrap = this.$element.wrap( '<div>' ).parent();
 
 		this.$prevButton = $( '<button>' )
 			.addClass( 'carousel-prev-button' )
