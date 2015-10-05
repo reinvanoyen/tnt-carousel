@@ -1,8 +1,8 @@
 {
   "name": "tnt-carousel",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Super simple carousel with touch support",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
