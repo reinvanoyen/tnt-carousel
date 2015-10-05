@@ -22,7 +22,7 @@
     "type": "git",
     "url": "https://github.com/ReinVO/tnt-carousel.git"
   },
-  "license": "ISC",
+  "license": "MIT",
   "_id": "tnt-carousel@1.0.2",
   "_shasum": "a07d7d1315afe336d288a832274664d1f45711ce",
   "_from": "tnt-carousel@*",
