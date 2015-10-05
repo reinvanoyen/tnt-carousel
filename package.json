@@ -1,0 +1,29 @@
+{
+  "name": "tnt-carousel",
+  "version": "1.0.2",
+  "description": "Super simple carousel with touch support",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "carousel",
+    "jquery",
+    "swipe",
+    "gallery",
+    "photo"
+  ],
+  "author": {
+    "name": "Rein Van Oyen",
+    "email": "rein@tnt.be",
+    "url": "http://www.tnt.be"
+  },
+  "license": "ISC",
+  "readme": "ERROR: No README data found!",
+  "_id": "tnt-carousel@1.0.2",
+  "_shasum": "a07d7d1315afe336d288a832274664d1f45711ce",
+  "_from": "tnt-carousel@*",
+  "devDependencies": {
+    "jquery": "^2.1.4"
+  }
+}
