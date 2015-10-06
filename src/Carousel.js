@@ -6,6 +6,8 @@ var Carousel = function( $element, options ) {
 	this.amountOfSlides = this.$slides.size();
 	this.$images = this.$element.find( 'img' );
 	this.activeIndex = 0;
+	this.translateX = 0;
+	this.dragDistance = 0;
 
 	if( this.$images.size() > 0 ) {
 		var that = this;
@@ -94,36 +96,42 @@ Carousel.prototype = {
 
 		var that = this;
 
-		var swipeDistance,
-			posX,
-			posY
+		var originalTranslateX,
+			startPosX
 		;
 
 		this.$wrap.bind( 'touchstart', function( e ) {
 			var e = e.originalEvent.changedTouches[ 0 ];
-			posX = e.clientX;
-			posY = e.clientY;
-			swipeDistance = 0;
+			originalTranslateX = that.translateX;
+			startPosX = e.clientX;
 		} );
 
 		this.$wrap.bind( 'touchmove', function( e ) {
+			var event = e.originalEvent.changedTouches[ 0 ];
+			that.dragDistance = event.clientX - startPosX;
+			that.setTranslateX( originalTranslateX + ( that.dragDistance ) );
 			e.preventDefault();
 		} );
 
 		this.$wrap.bind( 'touchend', function( e ) {
-			var e = e.originalEvent.changedTouches[ 0 ];
-			swipeDistance = e.clientX - posX;
-			that.processSwipeDistance( swipeDistance );
+			that.fit();
+			that.dragDistance = 0;
 		} );
 	},
-	processSwipeDistance: function( dist ) {
-		if( dist < 0 ) {
+	fit: function() {
+		if( this.dragDistance < 0 ) {
 			this.next();
 		}
 
-		if( dist > 0 ) {
+		if( this.dragDistance > 0 ) {
 			this.prev();
 		}
+	},
+	setTranslateX: function( n ) {
+		this.translateX = n;
+		this.$element.css( {
+			'transform': 'translateX( ' + this.translateX + 'px )'
+		} );
 	},
 	refresh: function() {
 		var that = this;
@@ -132,6 +140,7 @@ Carousel.prototype = {
 
 		clearTimeout( this.timeout );
 
+		this.$wrap.attr( 'style', '' );
 		this.$slides.attr( 'style', '' );
 		this.$element.attr( 'style', '' );
 
@@ -198,10 +207,7 @@ Carousel.prototype = {
 		{
 			this.activeIndex = n;
 
-			this.$element.css( {
-				'transform': 'translateX( ' + -( this.activeIndex * this.slideWidth ) + 'px )'
-			} );
-
+			this.setTranslateX( -( this.activeIndex * this.slideWidth ) );
 			this.refreshButtons();
 		}
 	}

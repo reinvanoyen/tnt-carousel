@@ -55,7 +55,9 @@ div {
 
 div.example {
   width: 75%;
-  overflow: hidden; }
+  overflow: hidden;
+  transition: -webkit-transform 0.3s;
+  transition: transform 0.3s; }
   div.example
 div {
     width: 25%;
