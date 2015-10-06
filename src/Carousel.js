@@ -19,7 +19,7 @@ var Carousel = function( $element, options ) {
 
 	this.options = {
 		autoplay: false,
-		playInterval: 1000,
+		playInterval: 4000,
 		touchEvents: true,
 		arrowButtons: true
 	};
