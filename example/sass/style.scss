@@ -19,14 +19,29 @@ ul
 	margin: 0;
 	overflow: hidden;
 	list-style: none;
-	transition: transform .3s linear;
+	transition: transform .3s;
 }
 
 ul li
 {
 	float: left;
-	width: 25%;
+	width: 100%;
 	background-color: gray;
+	
+	@media screen and ( min-width: 1024px )
+	{
+		width: 50%;
+	}
+
+	@media screen and ( min-width: 1280px )
+	{
+		width: 33.33%;
+	}
+
+	@media screen and ( min-width: 1400px )
+	{
+		width: 25%;
+	}
 }
 
 ul.no-images li

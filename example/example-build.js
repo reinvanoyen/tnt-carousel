@@ -4,12 +4,13 @@ var Carousel = require( '../src/index.js' );
 
 $( document ).ready( function() {
 	var carousel1 = new Carousel( $( 'ul.no-images' ) );
-	var carousel2 = new Carousel( $( 'ul.images' ), {
-		autoplay: true
+	var carousel2 = new Carousel( $( 'ul.images' ) );
+	var carousel3 = new Carousel( $( 'ul.padding' ), {
+		arrowButtons: false
 	} );
-	var carousel3 = new Carousel( $( 'ul.padding' ) );
 	var carousel4 = new Carousel( $( '.example' ) );
 } );
+
 },{"../src/index.js":4,"jquery":2}],2:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.4
@@ -9245,7 +9246,8 @@ var Carousel = function( $element, options ) {
 	this.options = {
 		autoplay: false,
 		playInterval: 1000,
-		touchEvents: true
+		touchEvents: true,
+		arrowButtons: true
 	};
 
 	$.extend( this.options, options );
@@ -9258,6 +9260,7 @@ var Carousel = function( $element, options ) {
 	this.activeIndex = 0;
 	this.translateX = 0;
 	this.dragDistance = 0;
+	this.dragDuration = 0;
 
 	utils.loadImages( this.$images, function() {
 		that.build();
@@ -9268,19 +9271,22 @@ Carousel.prototype.build = function() {
 
 	this.$wrap = this.$element.wrap( '<div>' ).parent();
 
-	this.$prevButton = $( '<button>' )
-		.addClass( 'carousel-prev-button' )
-		.appendTo( this.$wrap )
-	;
-
-	this.$nextButton = $( '<button>' )
-		.addClass( 'carousel-next-button' )
-		.appendTo( this.$wrap )
-	;
-
 	this.$element.addClass( 'loaded' );
 
 	this.$firstSlide = this.$slides.eq( 0 );
+
+	if( this.options.arrowButtons ) {
+
+		this.$prevButton = $( '<button>' )
+			.addClass( 'carousel-prev-button' )
+			.appendTo( this.$wrap )
+		;
+
+		this.$nextButton = $( '<button>' )
+			.addClass( 'carousel-next-button' )
+			.appendTo( this.$wrap )
+		;
+	}
 
 	this.refresh();
 	this.bindEvents();
@@ -9302,15 +9308,18 @@ Carousel.prototype.bindEvents = function() {
 		that.refresh();
 	} );
 
-	this.$prevButton.click( function() {
-		that.goToPrevious();
-		that.pause();
-	} );
+	if( this.options.arrowButtons ) {
 
-	this.$nextButton.click( function() {
-		that.goToNext();
-		that.pause();
-	} );
+		this.$prevButton.click( function() {
+			that.goToPrevious();
+			that.pause();
+		} );
+
+		this.$nextButton.click( function() {
+			that.goToNext();
+			that.pause();
+		} );
+	}
 
 	$( document ).keydown( function( e ) {
 		if( e.keyCode === 37 ) {
@@ -9326,13 +9335,15 @@ Carousel.prototype.bindEvents = function() {
 	if( this.options.touchEvents ) {
 
 		var originalTranslateX,
-			startPosX
+			startPosX,
+			startTime
 		;
 
 		this.$wrap.bind( 'touchstart', function( e ) {
 			var event = e.originalEvent.changedTouches[ 0 ];
 			originalTranslateX = that.translateX;
 			startPosX = event.clientX;
+			startTime = Date.now();
 		} );
 
 		this.$wrap.bind( 'touchmove', function( e ) {
@@ -9343,10 +9354,18 @@ Carousel.prototype.bindEvents = function() {
 		} );
 
 		this.$wrap.bind( 'touchend', function( e ) {
+			that.dragDuration = ( Date.now() - startTime );
 			that.adjustScrollPosition();
 			that.dragDistance = 0;
+			that.dragDuration = 0;
 		} );
 	}
+};
+
+Carousel.prototype.setTransitionDuration = function( n ) {
+	this.$element.css( {
+		'transition-duration': n + 'ms',
+	} );
 };
 
 Carousel.prototype.setTranslateX = function( n ) {
@@ -9361,12 +9380,29 @@ Carousel.prototype.setTranslateX = function( n ) {
 
 Carousel.prototype.adjustScrollPosition = function() {
 
+	var absoluteDistance = Math.abs( this.dragDistance )
+	var speed = ( this.dragDuration / absoluteDistance );
+	
+	this.setTransitionDuration( speed * 300 );
+
+	var amountOfSlidesDragged = Math.ceil( absoluteDistance / this.slideWidth );
+
 	if( this.dragDistance < 0 ) {
-		this.goToNext();
+		if( this.isOnRightEdge ) {
+			this.goTo( this.amountOfSlides - this.amountVisible );
+		}
+		else {
+			this.goTo( this.activeIndex + amountOfSlidesDragged );
+		}
 	}
 
 	if( this.dragDistance > 0 ) {
-		this.goToPrevious();
+		if( this.isOnLeftEdge ) {
+			this.goTo( 0 );
+		}
+		else {
+			this.goTo( this.activeIndex - amountOfSlidesDragged );
+		}
 	}
 };
 
@@ -9375,8 +9411,6 @@ Carousel.prototype.refresh = function() {
 	var that = this;
 
 	this.activeIndex = 0;
-
-	clearTimeout( this.timeout );
 
 	this.$wrap.attr( 'style', '' );
 	this.$slides.attr( 'style', '' );
@@ -9396,38 +9430,44 @@ Carousel.prototype.refresh = function() {
 
 	this.totalWidth = ( this.amountOfSlides * this.slideWidth );
 
-	this.timeout = setTimeout( function() {
-		that.$element.css( {
-			width: that.totalWidth
-		} );
+	that.$element.css( {
+		width: that.totalWidth
+	} );
 
-		that.$slides.css( {
-			float: 'left',
-			width: that.slideWidth
-		} );
+	that.$slides.css( {
+		float: 'left',
+		width: that.slideWidth
+	} );
 
-		that.$wrap.css( {
-			width: that.elementWidth
-		} );
+	that.$wrap.css( {
+		width: that.elementWidth
+	} );
 
-	}, 500 );
-
+	this.refreshState();
 	this.refreshButtons();
+};
+
+Carousel.prototype.refreshState = function() {
+	this.isOnLeftEdge = ( this.activeIndex === 0 );
+
+	var restSlides = this.amountOfSlides - this.activeIndex;
+	this.isOnRightEdge = ( restSlides <= this.amountVisible );
 };
 
 Carousel.prototype.refreshButtons = function() {
 
-	var restSlides = this.amountOfSlides - this.activeIndex;
+	if( this.options.arrowButtons ) {
 
-	this.$prevButton.removeClass( 'hide' );
-	this.$nextButton.removeClass( 'hide' );
+		this.$prevButton.removeClass( 'hide' );
+		this.$nextButton.removeClass( 'hide' );
 
-	if( this.activeIndex === 0 ) {
-		this.$prevButton.addClass( 'hide' );
-	}
+		if( this.isOnLeftEdge ) {
+			this.$prevButton.addClass( 'hide' );
+		}
 
-	if( restSlides <= this.amountVisible ) {
-		this.$nextButton.addClass( 'hide' );
+		if( this.isOnRightEdge ) {
+			this.$nextButton.addClass( 'hide' );
+		}
 	}
 };
 
@@ -9445,13 +9485,21 @@ Carousel.prototype.goToPrevious = function() {
 
 Carousel.prototype.goTo = function( n ) {
 
-	var restSlides = this.amountOfSlides - n;
+	if( n < 0 ) {
+		this.goTo( 0 );
+	}
+	else if( n > ( this.amountOfSlides -this.amountVisible ) ) {
+		this.goTo( this.amountOfSlides - this.amountVisible )
+	}
+	else {
+		var restSlides = this.amountOfSlides - n;
 
-	if( restSlides >= this.amountVisible && n >= 0 ) {
-
-		this.activeIndex = n;
-		this.setTranslateX( -( this.activeIndex * this.slideWidth ) );
-		this.refreshButtons();
+		if( restSlides >= this.amountVisible && n >= 0 ) {
+			this.activeIndex = n;
+			this.setTranslateX( -( this.activeIndex * this.slideWidth ) );
+			this.refreshState();
+			this.refreshButtons();
+		}
 	}
 };
 
@@ -9474,6 +9522,7 @@ Carousel.prototype.pause = function() {
 };
 
 module.exports = Carousel;
+
 },{"./utils.js":5,"jquery":2}],4:[function(require,module,exports){
 module.exports = require( './Carousel.js' );
 },{"./Carousel.js":3}],5:[function(require,module,exports){

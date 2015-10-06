@@ -14,13 +14,22 @@ ul {
   margin: 0;
   overflow: hidden;
   list-style: none;
-  transition: -webkit-transform 0.3s linear;
-  transition: transform 0.3s linear; }
+  transition: -webkit-transform 0.3s;
+  transition: transform 0.3s; }
 
 ul li {
   float: left;
-  width: 25%;
+  width: 100%;
   background-color: gray; }
+  @media screen and (min-width: 1024px) {
+    ul li {
+      width: 50%; } }
+  @media screen and (min-width: 1280px) {
+    ul li {
+      width: 33.33%; } }
+  @media screen and (min-width: 1400px) {
+    ul li {
+      width: 25%; } }
 
 ul.no-images li {
   height: 250px; }
