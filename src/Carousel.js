@@ -1,109 +1,113 @@
+/*
+
+TNT CAROUSEL
+------------
+
+Author: Rein Van Oyen <rein@tnt.be>
+Website: http://www.tnt.be
+Repo: http://github.com/ReinVO/tnt-carousel
+Issues: http://github.com/ReinVO/tnt-carousel/issues
+
+*/
+
 var $ = require( 'jquery' );
+var utils = require( './utils.js' );
 
 var Carousel = function( $element, options ) {
+
+	var that = this;
+
+	this.options = {
+		autoplay: false,
+		playInterval: 1000,
+		touchEvents: true
+	};
+
+	$.extend( this.options, options );
+
 	this.$element = $element;
 	this.$slides = this.$element.children();
-	this.amountOfSlides = this.$slides.size();
 	this.$images = this.$element.find( 'img' );
+
+	this.amountOfSlides = this.$slides.length;
 	this.activeIndex = 0;
 	this.translateX = 0;
 	this.dragDistance = 0;
 
-	if( this.$images.size() > 0 ) {
-		var that = this;
-		this.loadImages( function() {
-			that.build();
-		} );
-	}
-	else {
-		this.build();
+	utils.loadImages( this.$images, function() {
+		that.build();
+	} );
+};
+
+Carousel.prototype.build = function() {
+
+	this.$wrap = this.$element.wrap( '<div>' ).parent();
+
+	this.$prevButton = $( '<button>' )
+		.addClass( 'carousel-prev-button' )
+		.appendTo( this.$wrap )
+	;
+
+	this.$nextButton = $( '<button>' )
+		.addClass( 'carousel-next-button' )
+		.appendTo( this.$wrap )
+	;
+
+	this.$element.addClass( 'loaded' );
+
+	this.$firstSlide = this.$slides.eq( 0 );
+
+	this.refresh();
+	this.bindEvents();
+
+	if( this.options.autoplay ) {
+		this.play();
 	}
 };
 
-Carousel.prototype = {
-	build: function() {
-		this.$wrap = this.$element.wrap( '<div>' ).parent();
+Carousel.prototype.destroy = function() {
+	// destroy
+};
 
-		this.$prevButton = $( '<button>' )
-			.addClass( 'carousel-prev-button' )
-			.appendTo( this.$wrap )
-		;
+Carousel.prototype.bindEvents = function() {
 
-		this.$nextButton = $( '<button>' )
-			.addClass( 'carousel-next-button' )
-			.appendTo( this.$wrap )
-		;
+	var that = this;
 
-		this.$element.addClass( 'loaded' );
+	$( window ).resize( function() {
+		that.refresh();
+	} );
 
-		this.$firstSlide = this.$slides.eq( 0 );
-		this.refresh();
-		this.bindEvents();
-	},
-	loadImages: function( callback ) {
+	this.$prevButton.click( function() {
+		that.goToPrevious();
+		that.pause();
+	} );
 
-		var amountLoaded = 0,
-			amountToLoad = this.$images.size();
+	this.$nextButton.click( function() {
+		that.goToNext();
+		that.pause();
+	} );
 
-		this.$images.each( function()
-		{
-			var $currentImage = $( this );
-			var image = new Image();
+	$( document ).keydown( function( e ) {
+		if( e.keyCode === 37 ) {
+			that.goToPrevious();
+			that.pause();
+		}
+		else if( e.keyCode === 39 ) {
+			that.goToNext();
+			that.pause();
+		}
+	} );
 
-			image.onload = function()
-			{
-				amountLoaded++;
-
-				if( amountLoaded === amountToLoad )
-				{
-					callback();
-				}
-			}
-
-			image.src = $currentImage.attr( 'src' );
-		} );
-	},
-	bindEvents: function() {
-
-		var that = this;
-
-		$( window ).resize( function() {
-			that.refresh();
-		} );
-
-		this.$nextButton.click( function() {
-			that.next();
-		} );
-
-		this.$prevButton.click( function() {
-			that.prev();
-		} );
-
-		$( document ).keydown( function( e ) {
-			if( e.keyCode == 37 )
-			{
-				that.prev();
-			}
-			else if( e.keyCode == 39 )
-			{
-				that.next();
-			}
-		} );
-
-		this.bindTouchEvents();
-	},
-	bindTouchEvents: function() {
-
-		var that = this;
+	if( this.options.touchEvents ) {
 
 		var originalTranslateX,
 			startPosX
 		;
 
 		this.$wrap.bind( 'touchstart', function( e ) {
-			var e = e.originalEvent.changedTouches[ 0 ];
+			var event = e.originalEvent.changedTouches[ 0 ];
 			originalTranslateX = that.translateX;
-			startPosX = e.clientX;
+			startPosX = event.clientX;
 		} );
 
 		this.$wrap.bind( 'touchmove', function( e ) {
@@ -114,103 +118,134 @@ Carousel.prototype = {
 		} );
 
 		this.$wrap.bind( 'touchend', function( e ) {
-			that.fit();
+			that.adjustScrollPosition();
 			that.dragDistance = 0;
 		} );
-	},
-	fit: function() {
-		if( this.dragDistance < 0 ) {
-			this.next();
-		}
-
-		if( this.dragDistance > 0 ) {
-			this.prev();
-		}
-	},
-	setTranslateX: function( n ) {
-		this.translateX = n;
-		this.$element.css( {
-			'transform': 'translateX( ' + this.translateX + 'px )'
-		} );
-	},
-	refresh: function() {
-		var that = this;
-
-		this.activeIndex = 0;
-
-		clearTimeout( this.timeout );
-
-		this.$wrap.attr( 'style', '' );
-		this.$slides.attr( 'style', '' );
-		this.$element.attr( 'style', '' );
-
-		this.elementWidth = this.$element[0].getBoundingClientRect().width;
-		this.slideWidth = this.$firstSlide[0].getBoundingClientRect().width;
-		this.slideHeight = this.$firstSlide[0].getBoundingClientRect().height;
-
-		this.$wrap.css( {
-			position: 'relative',
-			overflow: 'hidden',
-			height: this.slideHeight
-		} );
-
-		this.amountVisible = Math.ceil( this.elementWidth / this.slideWidth );
-
-		this.totalWidth = ( this.amountOfSlides * this.slideWidth );
-
-		this.timeout = setTimeout( function()
-		{
-			that.$element.css( {
-				width: that.totalWidth
-			} );
-
-			that.$slides.css( {
-				float: 'left',
-				width: that.slideWidth
-			} );
-
-			that.$wrap.css( {
-				width: that.elementWidth
-			} );
-
-		}, 500 );
-
-		this.refreshButtons();
-	},
-	refreshButtons: function() {
-		this.$prevButton.removeClass( 'hide' );
-		this.$nextButton.removeClass( 'hide' );
-
-		var restSlides = this.amountOfSlides - this.activeIndex;
-
-		if( this.activeIndex === 0 )
-		{
-			this.$prevButton.addClass( 'hide' );
-		}
-
-		if( restSlides <= this.amountVisible )
-		{
-			this.$nextButton.addClass( 'hide' );
-		}
-	},
-	next: function() {
-		this.slideTo( this.activeIndex + 1 );
-	},
-	prev: function() {
-		this.slideTo( this.activeIndex - 1 );
-	},
-	slideTo: function( n ) {
-
-		var restSlides = this.amountOfSlides - n;
-
-		if( restSlides >= this.amountVisible && n >= 0 )
-		{
-			this.activeIndex = n;
-
-			this.setTranslateX( -( this.activeIndex * this.slideWidth ) );
-			this.refreshButtons();
-		}
 	}
+};
+
+Carousel.prototype.setTranslateX = function( n ) {
+
+	this.translateX = n;
+	this.$element.css( {
+		'transform': 'translateX( ' + this.translateX + 'px )',
+		'-moz-transform': 'translateX( ' + this.translateX + 'px )',
+		'-webkit-transform': 'translateX( ' + this.translateX + 'px )'
+	} );
+};
+
+Carousel.prototype.adjustScrollPosition = function() {
+
+	if( this.dragDistance < 0 ) {
+		this.goToNext();
+	}
+
+	if( this.dragDistance > 0 ) {
+		this.goToPrevious();
+	}
+};
+
+Carousel.prototype.refresh = function() {
+
+	var that = this;
+
+	this.activeIndex = 0;
+
+	clearTimeout( this.timeout );
+
+	this.$wrap.attr( 'style', '' );
+	this.$slides.attr( 'style', '' );
+	this.$element.attr( 'style', '' );
+
+	this.elementWidth = this.$element[0].getBoundingClientRect().width;
+	this.slideWidth = this.$firstSlide[0].getBoundingClientRect().width;
+	this.slideHeight = this.$firstSlide[0].getBoundingClientRect().height;
+
+	this.$wrap.css( {
+		position: 'relative',
+		overflow: 'hidden',
+		height: this.slideHeight
+	} );
+
+	this.amountVisible = Math.ceil( this.elementWidth / this.slideWidth );
+
+	this.totalWidth = ( this.amountOfSlides * this.slideWidth );
+
+	this.timeout = setTimeout( function() {
+		that.$element.css( {
+			width: that.totalWidth
+		} );
+
+		that.$slides.css( {
+			float: 'left',
+			width: that.slideWidth
+		} );
+
+		that.$wrap.css( {
+			width: that.elementWidth
+		} );
+
+	}, 500 );
+
+	this.refreshButtons();
+};
+
+Carousel.prototype.refreshButtons = function() {
+
+	var restSlides = this.amountOfSlides - this.activeIndex;
+
+	this.$prevButton.removeClass( 'hide' );
+	this.$nextButton.removeClass( 'hide' );
+
+	if( this.activeIndex === 0 ) {
+		this.$prevButton.addClass( 'hide' );
+	}
+
+	if( restSlides <= this.amountVisible ) {
+		this.$nextButton.addClass( 'hide' );
+	}
+};
+
+Carousel.prototype.goToNext = function() {
+
+	this.goTo( this.activeIndex + 1 );
+
+};
+
+Carousel.prototype.goToPrevious = function() {
+
+	this.goTo( this.activeIndex - 1 );
+
+};
+
+Carousel.prototype.goTo = function( n ) {
+
+	var restSlides = this.amountOfSlides - n;
+
+	if( restSlides >= this.amountVisible && n >= 0 ) {
+
+		this.activeIndex = n;
+		this.setTranslateX( -( this.activeIndex * this.slideWidth ) );
+		this.refreshButtons();
+	}
+};
+
+Carousel.prototype.play = function() {
+
+	var that = this;
+
+	this.playInterval = setInterval( function() {
+
+		that.goToNext();
+
+	}, this.options.playInterval );
+
+};
+
+Carousel.prototype.pause = function() {
+
+	clearInterval( this.playInterval );
+
 };
 
 module.exports = Carousel;
