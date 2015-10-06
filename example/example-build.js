@@ -9223,7 +9223,7 @@ return jQuery;
 },{}],3:[function(require,module,exports){
 var $ = require( 'jquery' );
 
-var Carousel = function( $element ) {
+var Carousel = function( $element, options ) {
 	this.$element = $element;
 	this.$slides = this.$element.children();
 	this.amountOfSlides = this.$slides.size();
@@ -9358,12 +9358,7 @@ Carousel.prototype = {
 		this.$slides.attr( 'style', '' );
 		this.$element.attr( 'style', '' );
 
-		this.elementWidth = this.$wrap.width();
-
-		this.$element.css( {
-			width: this.elementWidth
-		} );
-
+		this.elementWidth = this.$element[0].getBoundingClientRect().width;
 		this.slideWidth = this.$firstSlide[0].getBoundingClientRect().width;
 		this.slideHeight = this.$firstSlide[0].getBoundingClientRect().height;
 
@@ -9383,10 +9378,15 @@ Carousel.prototype = {
 				width: that.totalWidth
 			} );
 
-			that.$element.children().css( {
+			that.$slides.css( {
 				float: 'left',
 				width: that.slideWidth
 			} );
+
+			that.$wrap.css( {
+				width: that.elementWidth
+			} );
+
 		}, 500 );
 
 		this.refreshButtons();

@@ -14,6 +14,7 @@ body
 
 ul
 {
+	position: relative;
 	padding: 0;
 	margin: 0;
 	overflow: hidden;
@@ -58,21 +59,33 @@ div
 
 div.example
 {
-	width: 50%;
+	width: 75%;
 	overflow: hidden;
 
 	div
 	{
-		width: 50%;
+		width: 25%;
 		height: 150px;
 		background-color: green;
+		float: left;
 	}
 }
 
 button
 {
 	position: absolute;
-	top: 0;
+	top: 50%;
+	display: block;
+	width: 30px;
+	height: 30px;
+	margin-top: -15px;
+	cursor: pointer;
+	transition: opacity .5s;
+
+	&.hide
+	{
+		opacity: 0;
+	}
 }
 
 .carousel-next-button
