@@ -9247,7 +9247,8 @@ var Carousel = function( $element, options ) {
 		autoplay: false,
 		playInterval: 4000,
 		touchEvents: true,
-		arrowButtons: true
+		arrowButtons: true,
+		thresshold: .1
 	};
 
 	$.extend( this.options, options );
@@ -9372,37 +9373,44 @@ Carousel.prototype.setTranslateX = function( n ) {
 
 	this.translateX = n;
 	this.$element.css( {
-		'transform': 'translateX( ' + this.translateX + 'px )',
-		'-moz-transform': 'translateX( ' + this.translateX + 'px )',
-		'-webkit-transform': 'translateX( ' + this.translateX + 'px )'
+		'transform': 'translate3d( ' + this.translateX + 'px, 0, 0 )',
+		'-moz-transform': 'translate3d( ' + this.translateX + 'px, 0, 0 )',
+		'-webkit-transform': 'translate3d( ' + this.translateX + 'px, 0, 0 )'
 	} );
 };
 
 Carousel.prototype.adjustScrollPosition = function() {
 
 	var absoluteDistance = Math.abs( this.dragDistance )
-	var speed = ( this.dragDuration / absoluteDistance );
+
+	if( absoluteDistance >  ( this.slideWidth * this.options.thresshold ) ) {
+
+		var speed = ( this.dragDuration / absoluteDistance );
 	
-	this.setTransitionDuration( speed * 300 );
+		this.setTransitionDuration( speed * 300 );
 
-	var amountOfSlidesDragged = Math.ceil( absoluteDistance / this.slideWidth );
+		var amountOfSlidesDragged = Math.ceil( absoluteDistance / this.slideWidth );
 
-	if( this.dragDistance < 0 ) {
-		if( this.isOnRightEdge ) {
-			this.goTo( this.amountOfSlides - this.amountVisible );
+		if( this.dragDistance < 0 ) {
+			if( this.isOnRightEdge ) {
+				this.goTo( this.amountOfSlides - this.amountVisible );
+			}
+			else {
+				this.goTo( this.activeIndex + amountOfSlidesDragged );
+			}
 		}
-		else {
-			this.goTo( this.activeIndex + amountOfSlidesDragged );
+
+		if( this.dragDistance > 0 ) {
+			if( this.isOnLeftEdge ) {
+				this.goTo( 0 );
+			}
+			else {
+				this.goTo( this.activeIndex - amountOfSlidesDragged );
+			}
 		}
 	}
-
-	if( this.dragDistance > 0 ) {
-		if( this.isOnLeftEdge ) {
-			this.goTo( 0 );
-		}
-		else {
-			this.goTo( this.activeIndex - amountOfSlidesDragged );
-		}
+	else {
+		this.goTo( this.activeIndex );
 	}
 };
 

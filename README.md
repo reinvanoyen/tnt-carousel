@@ -28,7 +28,7 @@ new Carousel($('#my-carousel'));
 
 Option | Type | Default | Description
 ------ | ---- | ------- | -----------
-autoplay | boolean | false | Enables autoplay
+autoplay | boolean | false | Whether or not to automatically start playing once the carousel is built
 autoplayInterval | int | 4000 | The time interval (in milliseconds) between each slide
 touchEvents | boolean | true | Whether or not to use touch events
-arrowButtons | boolean | true | Whether to automatically add a previous and next button
+arrowButtons | boolean | true | Whether or not to automatically add a previous and next button
