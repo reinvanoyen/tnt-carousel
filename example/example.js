@@ -7,5 +7,6 @@ $( document ).ready( function() {
 	var carousel3 = new Carousel( $( 'ul.padding' ), {
 		arrowButtons: false
 	} );
+
 	var carousel4 = new Carousel( $( '.example' ) );
 } );

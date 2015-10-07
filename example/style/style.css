@@ -20,7 +20,11 @@ ul {
 ul li {
   float: left;
   width: 100%;
-  background-color: gray; }
+  background-color: gray;
+  opacity: 0.5;
+  transition: opacity 1s; }
+  ul li.active {
+    opacity: 1; }
   @media screen and (min-width: 1024px) {
     ul li {
       width: 50%; } }
@@ -72,7 +76,12 @@ div {
     width: 25%;
     height: 150px;
     background-color: green;
-    float: left; }
+    float: left;
+    opacity: 0.5;
+    transition: opacity 1s; }
+    div.example
+div.active {
+      opacity: 1; }
 
 button {
   position: absolute;

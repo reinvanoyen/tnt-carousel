@@ -27,6 +27,13 @@ ul li
 	float: left;
 	width: 100%;
 	background-color: gray;
+	opacity: 0.5;
+	transition: opacity 1s;
+
+	&.active
+	{
+		opacity: 1;
+	}
 	
 	@media screen and ( min-width: 1024px )
 	{
@@ -84,6 +91,13 @@ div.example
 		height: 150px;
 		background-color: green;
 		float: left;
+		opacity: 0.5;
+		transition: opacity 1s;
+
+		&.active
+		{
+			opacity: 1;
+		}
 	}
 }
 

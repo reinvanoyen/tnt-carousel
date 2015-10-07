@@ -27,6 +27,7 @@ var Carousel = function( $element, options ) {
 		previousArrowClass: 'carousel-prev-button',
 		nextArrowClass: 'carousel-next-button',
 		loadedClass: 'loaded',
+		activeSlideClass: 'active',
 		thresshold: .1
 	};
 
@@ -37,7 +38,7 @@ var Carousel = function( $element, options ) {
 	this.$images = this.$element.find( 'img' );
 
 	this.amountOfSlides = this.$slides.length;
-	this.activeIndex = 0;
+	this.activeSlideIndex = 0;
 	this.translateX = 0;
 	this.dragDistance = 0;
 	this.dragDuration = 0;
@@ -89,6 +90,8 @@ Carousel.prototype.destroy = function() {
 		this.$prevButton.remove();
 		this.$nextButton.remove();
 	}
+
+	this.$slides.removeClass( this.options.activeSlideClass );
 
 	this.pause();
 	this.unbindEvents();
@@ -200,16 +203,16 @@ Carousel.prototype.adjustScrollPosition = function() {
 
 		var speed = ( this.dragDuration / absoluteDistance );
 	
-		this.setTransitionDuration( speed * 300 );
+		this.setTransitionDuration( speed * 1000 );
 
 		var amountOfSlidesDragged = Math.ceil( absoluteDistance / this.slideWidth );
 
 		if( this.dragDistance < 0 ) {
 			if( this.isOnRightEdge ) {
-				this.goTo( this.amountOfSlides - this.amountVisible );
+				this.goTo( this.amountOfSlides - 1 );
 			}
 			else {
-				this.goTo( this.activeIndex + amountOfSlidesDragged );
+				this.goTo( this.activeSlideIndex + amountOfSlidesDragged );
 			}
 		}
 
@@ -218,12 +221,12 @@ Carousel.prototype.adjustScrollPosition = function() {
 				this.goTo( 0 );
 			}
 			else {
-				this.goTo( this.activeIndex - amountOfSlidesDragged );
+				this.goTo( this.activeSlideIndex - amountOfSlidesDragged );
 			}
 		}
 	}
 	else {
-		this.goTo( this.activeIndex );
+		this.goTo( this.activeSlideIndex );
 	}
 };
 
@@ -231,7 +234,7 @@ Carousel.prototype.refresh = function() {
 
 	var that = this;
 
-	this.activeIndex = 0;
+	this.activeSlideIndex = 0;
 
 	this.$wrap.removeAttr( 'style' );
 	this.$slides.removeAttr( 'style' );
@@ -265,14 +268,22 @@ Carousel.prototype.refresh = function() {
 	} );
 
 	this.refreshState();
-	this.refreshButtons();
 };
 
 Carousel.prototype.refreshState = function() {
-	this.isOnLeftEdge = ( this.activeIndex === 0 );
 
-	var restSlides = this.amountOfSlides - this.activeIndex;
+	this.$slides
+		.removeClass( this.options.activeSlideClass )
+		.eq( this.activeSlideIndex )
+		.addClass( this.options.activeSlideClass )
+	;
+
+	this.isOnLeftEdge = ( this.activeSlideIndex === 0 );
+	
+	var restSlides = this.amountOfSlides - this.activeSlideIndex;
 	this.isOnRightEdge = ( restSlides <= this.amountVisible );
+
+	this.refreshButtons();
 };
 
 Carousel.prototype.refreshButtons = function() {
@@ -294,33 +305,34 @@ Carousel.prototype.refreshButtons = function() {
 
 Carousel.prototype.goToNext = function() {
 
-	this.goTo( this.activeIndex + 1 );
+	this.goTo( this.activeSlideIndex + 1 );
 
 };
 
 Carousel.prototype.goToPrevious = function() {
 
-	this.goTo( this.activeIndex - 1 );
+	this.goTo( this.activeSlideIndex - 1 );
 
 };
 
 Carousel.prototype.goTo = function( n ) {
 
+	if( n >= 0 && n < this.amountOfSlides ) {
+		this.activeSlideIndex = n;
+
+		var translateX = Math.max( -( this.activeSlideIndex * this.slideWidth ), -( this.totalWidth - this.elementWidth ) );
+		translateX = Math.min( 0, translateX );
+		
+		this.setTranslateX( translateX );
+		this.refreshState();
+	}
+
 	if( n < 0 ) {
 		this.goTo( 0 );
 	}
-	else if( n > ( this.amountOfSlides -this.amountVisible ) ) {
-		this.goTo( this.amountOfSlides - this.amountVisible )
-	}
-	else {
-		var restSlides = this.amountOfSlides - n;
 
-		if( restSlides >= this.amountVisible && n >= 0 ) {
-			this.activeIndex = n;
-			this.setTranslateX( -( this.activeIndex * this.slideWidth ) );
-			this.refreshState();
-			this.refreshButtons();
-		}
+	if( n >= this.amountOfSlides ) {
+		this.goTo( this.amountOfSlides - 1 );
 	}
 };
 
