@@ -9236,6 +9236,8 @@ Issues: http://github.com/ReinVO/tnt-carousel/issues
 
 */
 
+"use strict";
+
 var $ = require( 'jquery' );
 var utils = require( './utils.js' );
 
@@ -9298,7 +9300,21 @@ Carousel.prototype.build = function() {
 };
 
 Carousel.prototype.destroy = function() {
-	// destroy
+
+	this.$element.unwrap();
+	this.$element.removeClass( 'loaded' );
+
+	this.$slides.attr( 'style', '' );
+	this.$element.attr( 'style', '' );
+
+	if( this.options.arrowButtons ) {
+
+		this.$prevButton.remove();
+		this.$nextButton.remove();
+	}
+
+	this.pause();
+	this.unbindEvents();
 };
 
 Carousel.prototype.bindEvents = function() {
@@ -9363,9 +9379,19 @@ Carousel.prototype.bindEvents = function() {
 	}
 };
 
+Carousel.prototype.unbindEvents = function() {
+
+	$( window ).unbind( 'resize' );
+	$( document ).unbind( 'keydown' );
+
+};
+
 Carousel.prototype.setTransitionDuration = function( n ) {
+
 	this.$element.css( {
 		'transition-duration': n + 'ms',
+		'-moz-transition-duration': n + 'ms',
+		'-webkit-transition-duration': n + 'ms'
 	} );
 };
 
@@ -9530,7 +9556,6 @@ Carousel.prototype.pause = function() {
 };
 
 module.exports = Carousel;
-
 },{"./utils.js":5,"jquery":2}],4:[function(require,module,exports){
 module.exports = require( './Carousel.js' );
 },{"./Carousel.js":3}],5:[function(require,module,exports){
@@ -9548,14 +9573,14 @@ utils.loadImages = function( $images, callback ) {
 	}
 
 	$images.each( function() {
+
 		var image = new Image();
 
 		image.onload = function() {
 
 			amountLoaded++;
 
-			if( amountLoaded === amountToLoad )
-			{
+			if( amountLoaded === amountToLoad ) {
 				callback();
 			}
 		}

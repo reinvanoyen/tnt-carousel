@@ -12,14 +12,14 @@ utils.loadImages = function( $images, callback ) {
 	}
 
 	$images.each( function() {
+
 		var image = new Image();
 
 		image.onload = function() {
 
 			amountLoaded++;
 
-			if( amountLoaded === amountToLoad )
-			{
+			if( amountLoaded === amountToLoad ) {
 				callback();
 			}
 		}
