@@ -19,7 +19,7 @@ ul
 	margin: 0;
 	overflow: hidden;
 	list-style: none;
-	transition: transform .3s;
+	transition: transform .3s cubic-bezier(1, 0, 0, 1);
 }
 
 ul li
@@ -76,7 +76,7 @@ div.example
 {
 	width: 75%;
 	overflow: hidden;
-	transition: transform .3s;
+	transition: transform .3s cubic-bezier(1, 0, 0, 1);
 
 	div
 	{

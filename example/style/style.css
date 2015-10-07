@@ -14,8 +14,8 @@ ul {
   margin: 0;
   overflow: hidden;
   list-style: none;
-  transition: -webkit-transform 0.3s;
-  transition: transform 0.3s; }
+  transition: -webkit-transform 0.3s cubic-bezier(1, 0, 0, 1);
+  transition: transform 0.3s cubic-bezier(1, 0, 0, 1); }
 
 ul li {
   float: left;
@@ -65,8 +65,8 @@ div {
 div.example {
   width: 75%;
   overflow: hidden;
-  transition: -webkit-transform 0.3s;
-  transition: transform 0.3s; }
+  transition: -webkit-transform 0.3s cubic-bezier(1, 0, 0, 1);
+  transition: transform 0.3s cubic-bezier(1, 0, 0, 1); }
   div.example
 div {
     width: 25%;

@@ -9361,6 +9361,7 @@ Carousel.prototype.bindEvents = function() {
 			originalTranslateX = that.translateX;
 			startPosX = event.clientX;
 			startTime = Date.now();
+			that.setTransitionTimingFunction( 'linear' );
 		} );
 
 		this.$wrap.bind( 'touchmove', function( e ) {
@@ -9371,6 +9372,7 @@ Carousel.prototype.bindEvents = function() {
 		} );
 
 		this.$wrap.bind( 'touchend', function( e ) {
+			that.setTransitionTimingFunction( '' );
 			that.dragDuration = ( Date.now() - startTime );
 			that.adjustScrollPosition();
 			that.dragDistance = 0;
@@ -9384,6 +9386,14 @@ Carousel.prototype.unbindEvents = function() {
 	$( window ).unbind( 'resize' );
 	$( document ).unbind( 'keydown' );
 
+};
+
+Carousel.prototype.setTransitionTimingFunction = function( easing ) {
+	this.$element.css( {
+		'transition-timing-function': easing,
+		'-moz-transition-timing-function': easing,
+		'-webkit-transition-timing-function': easing
+	} );
 };
 
 Carousel.prototype.setTransitionDuration = function( n ) {
