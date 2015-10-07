@@ -51,7 +51,7 @@ activeSlideClass | string | active | The currently active slide will have this c
 Destroys a carousel after it's been built. This restores the DOM to it's original state.
 
 ```javascript
-	carousel.destroy();
+carousel.destroy();
 ```
 
 #### build
@@ -59,9 +59,9 @@ Destroys a carousel after it's been built. This restores the DOM to it's origina
 Build the carousel. Gets called automatically upon creating an instance. Useful to rebuild previously destroyed carousels.
 
 ```javascript
-	var carousel = new Carousel($('#my-carousel'));
-	carousel.destroy();
-	carousel.build();
+var carousel = new Carousel($('#my-carousel'));
+carousel.destroy();
+carousel.build();
 ```
 
 #### goTo
@@ -69,7 +69,7 @@ Build the carousel. Gets called automatically upon creating an instance. Useful 
 Slide to a certain slide
 
 ```javascript
-	carousel.goTo( 3 );
+carousel.goTo( 3 );
 ```
 
 #### play
@@ -77,7 +77,7 @@ Slide to a certain slide
 Automatically go from one slide to the other
 
 ```javascript
-	carousel.play();
+carousel.play();
 ```
 
 #### pause
@@ -85,5 +85,5 @@ Automatically go from one slide to the other
 Pause the carousel if it's playing
 
 ```javascript
-	carousel.pause();
+carousel.pause();
 ```
