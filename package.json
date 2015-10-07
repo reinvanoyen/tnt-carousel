@@ -1,6 +1,6 @@
 {
   "name": "tnt-carousel",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Super simple responsive carousel with touch support",
   "main": "src/index.js",
   "scripts": {
