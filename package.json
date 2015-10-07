@@ -1,7 +1,7 @@
 {
   "name": "tnt-carousel",
-  "version": "1.1.1",
-  "description": "Super simple carousel with touch support",
+  "version": "1.1.2",
+  "description": "Super simple responsive carousel with touch support",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,7 +11,8 @@
     "jquery",
     "swipe",
     "gallery",
-    "photo"
+    "photo",
+    "responsive"
   ],
   "author": {
     "name": "Rein Van Oyen",
