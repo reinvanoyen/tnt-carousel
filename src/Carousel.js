@@ -24,6 +24,9 @@ var Carousel = function( $element, options ) {
 		playInterval: 4000,
 		touchEvents: true,
 		arrowButtons: true,
+		previousArrowClass: 'carousel-prev-button',
+		nextArrowClass: 'carousel-next-button',
+		loadedClass: 'loaded',
 		thresshold: .1
 	};
 
@@ -48,19 +51,19 @@ Carousel.prototype.build = function() {
 
 	this.$wrap = this.$element.wrap( '<div>' ).parent();
 
-	this.$element.addClass( 'loaded' );
+	this.$element.addClass( this.options.loadedClass );
 
 	this.$firstSlide = this.$slides.eq( 0 );
 
 	if( this.options.arrowButtons ) {
 
 		this.$prevButton = $( '<button>' )
-			.addClass( 'carousel-prev-button' )
+			.addClass( this.options.previousArrowClass )
 			.appendTo( this.$wrap )
 		;
 
 		this.$nextButton = $( '<button>' )
-			.addClass( 'carousel-next-button' )
+			.addClass( this.options.nextArrowClass )
 			.appendTo( this.$wrap )
 		;
 	}
@@ -76,10 +79,10 @@ Carousel.prototype.build = function() {
 Carousel.prototype.destroy = function() {
 
 	this.$element.unwrap();
-	this.$element.removeClass( 'loaded' );
+	this.$element.removeClass( this.options.loadedClass );
 
-	this.$slides.attr( 'style', '' );
-	this.$element.attr( 'style', '' );
+	this.$slides.removeAttr( 'style' );
+	this.$element.removeAttr( 'style' );
 
 	if( this.options.arrowButtons ) {
 
@@ -135,7 +138,7 @@ Carousel.prototype.bindEvents = function() {
 			originalTranslateX = that.translateX;
 			startPosX = event.clientX;
 			startTime = Date.now();
-			that.setTransitionTimingFunction( 'linear' );
+			that.setTransitionTimingFunction( 'ease' );
 		} );
 
 		this.$wrap.bind( 'touchmove', function( e ) {
@@ -230,9 +233,9 @@ Carousel.prototype.refresh = function() {
 
 	this.activeIndex = 0;
 
-	this.$wrap.attr( 'style', '' );
-	this.$slides.attr( 'style', '' );
-	this.$element.attr( 'style', '' );
+	this.$wrap.removeAttr( 'style' );
+	this.$slides.removeAttr( 'style' );
+	this.$element.removeAttr( 'style' );
 
 	this.elementWidth = this.$element[0].getBoundingClientRect().width;
 	this.slideWidth = this.$firstSlide[0].getBoundingClientRect().width;
