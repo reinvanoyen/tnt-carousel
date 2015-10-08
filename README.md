@@ -46,14 +46,6 @@ activeSlideClass | string | active | The currently active slide will have this c
 
 ### Methods
 
-#### destroy
-
-Destroys a carousel after it's been built. This restores the DOM to it's original state.
-
-```javascript
-carousel.destroy();
-```
-
 #### build
 
 Build the carousel. Gets called automatically upon creating an instance. Useful to rebuild previously destroyed carousels.
@@ -62,6 +54,14 @@ Build the carousel. Gets called automatically upon creating an instance. Useful 
 var carousel = new Carousel($('#my-carousel'));
 carousel.destroy();
 carousel.build();
+```
+
+#### destroy
+
+Destroys a carousel after it's been built. This restores the DOM to it's original state.
+
+```javascript
+carousel.destroy();
 ```
 
 #### goTo

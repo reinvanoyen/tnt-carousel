@@ -197,7 +197,7 @@ Carousel.prototype.setTranslateX = function( n ) {
 
 Carousel.prototype.adjustScrollPosition = function() {
 
-	var absoluteDistance = Math.abs( this.dragDistance )
+	var absoluteDistance = Math.abs( this.dragDistance );
 
 	if( absoluteDistance >  ( this.slideWidth * this.options.thresshold ) ) {
 
@@ -232,8 +232,6 @@ Carousel.prototype.adjustScrollPosition = function() {
 
 Carousel.prototype.refresh = function() {
 
-	var that = this;
-
 	this.activeSlideIndex = 0;
 
 	this.$wrap.removeAttr( 'style' );
@@ -254,17 +252,17 @@ Carousel.prototype.refresh = function() {
 
 	this.totalWidth = ( this.amountOfSlides * this.slideWidth );
 
-	that.$element.css( {
-		width: that.totalWidth
+	this.$element.css( {
+		width: this.totalWidth
 	} );
 
-	that.$slides.css( {
+	this.$slides.css( {
 		float: 'left',
-		width: that.slideWidth
+		width: this.slideWidth
 	} );
 
-	that.$wrap.css( {
-		width: that.elementWidth
+	this.$wrap.css( {
+		width: this.elementWidth
 	} );
 
 	this.refreshState();
