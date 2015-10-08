@@ -15,86 +15,93 @@ Issues: http://github.com/ReinVO/tnt-carousel/issues
 var $ = require( 'jquery' );
 var utils = require( './utils.js' );
 
+var defaultOptions = {
+	autoplay: false,
+	playInterval: 4000,
+	touchEvents: true,
+	arrowButtons: true,
+	previousArrowClass: 'carousel-prev-button',
+	nextArrowClass: 'carousel-next-button',
+	loadedClass: 'loaded',
+	activeSlideClass: 'active',
+	thresshold: .1
+};
+
 var Carousel = function( $element, options ) {
 
-	var that = this;
-
-	this.options = {
-		autoplay: false,
-		playInterval: 4000,
-		touchEvents: true,
-		arrowButtons: true,
-		previousArrowClass: 'carousel-prev-button',
-		nextArrowClass: 'carousel-next-button',
-		loadedClass: 'loaded',
-		activeSlideClass: 'active',
-		thresshold: .1
-	};
-
-	$.extend( this.options, options );
-
 	this.$element = $element;
+	this.options = $.extend( defaultOptions, options );
+
 	this.$slides = this.$element.children();
-	this.$images = this.$element.find( 'img' );
 
 	this.amountOfSlides = this.$slides.length;
 	this.activeSlideIndex = 0;
 	this.translateX = 0;
 	this.dragDistance = 0;
 	this.dragDuration = 0;
+	this.isBuilt = false;
 
-	utils.loadImages( this.$images, function() {
+	var that = this;
+	utils.loadImages( this.$element.find( 'img' ), function() {
 		that.build();
 	} );
 };
 
 Carousel.prototype.build = function() {
 
-	this.$wrap = this.$element.wrap( '<div>' ).parent();
+	if( ! this.isBuilt ) {
 
-	this.$element.addClass( this.options.loadedClass );
+		this.$wrap = this.$element.wrap( '<div>' ).parent();
+		this.$element.addClass( this.options.loadedClass );
+		this.$firstSlide = this.$slides.eq( 0 );
 
-	this.$firstSlide = this.$slides.eq( 0 );
+		if( this.options.arrowButtons ) {
 
-	if( this.options.arrowButtons ) {
+			this.$prevButton = $( '<button>' )
+				.addClass( this.options.previousArrowClass )
+				.appendTo( this.$wrap )
+			;
 
-		this.$prevButton = $( '<button>' )
-			.addClass( this.options.previousArrowClass )
-			.appendTo( this.$wrap )
-		;
+			this.$nextButton = $( '<button>' )
+				.addClass( this.options.nextArrowClass )
+				.appendTo( this.$wrap )
+			;
+		}
 
-		this.$nextButton = $( '<button>' )
-			.addClass( this.options.nextArrowClass )
-			.appendTo( this.$wrap )
-		;
-	}
+		this.refresh();
+		this.bindEvents();
 
-	this.refresh();
-	this.bindEvents();
+		if( this.options.autoplay ) {
+			this.play();
+		}
 
-	if( this.options.autoplay ) {
-		this.play();
+		this.isBuilt = true;
 	}
 };
 
 Carousel.prototype.destroy = function() {
 
-	this.$element.unwrap();
-	this.$element.removeClass( this.options.loadedClass );
+	if( this.isBuilt ) {
 
-	this.$slides.removeAttr( 'style' );
-	this.$element.removeAttr( 'style' );
+		this.$element.unwrap();
+		this.$element.removeClass( this.options.loadedClass );
 
-	if( this.options.arrowButtons ) {
+		this.$slides.removeAttr( 'style' );
+		this.$element.removeAttr( 'style' );
 
-		this.$prevButton.remove();
-		this.$nextButton.remove();
+		if( this.options.arrowButtons ) {
+
+			this.$prevButton.remove();
+			this.$nextButton.remove();
+		}
+
+		this.$slides.removeClass( this.options.activeSlideClass );
+
+		this.pause();
+		this.unbindEvents();
+
+		this.isBuilt = false;
 	}
-
-	this.$slides.removeClass( this.options.activeSlideClass );
-
-	this.pause();
-	this.unbindEvents();
 };
 
 Carousel.prototype.bindEvents = function() {
@@ -241,16 +248,14 @@ Carousel.prototype.refresh = function() {
 	this.elementWidth = this.$element[0].getBoundingClientRect().width;
 	this.slideWidth = this.$firstSlide[0].getBoundingClientRect().width;
 	this.slideHeight = this.$firstSlide[0].getBoundingClientRect().height;
+	this.amountVisible = Math.ceil( this.elementWidth / this.slideWidth );
+	this.totalWidth = ( this.amountOfSlides * this.slideWidth );
 
 	this.$wrap.css( {
 		position: 'relative',
 		overflow: 'hidden',
 		height: this.slideHeight
 	} );
-
-	this.amountVisible = Math.ceil( this.elementWidth / this.slideWidth );
-
-	this.totalWidth = ( this.amountOfSlides * this.slideWidth );
 
 	this.$element.css( {
 		width: this.totalWidth
