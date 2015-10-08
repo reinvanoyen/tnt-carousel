@@ -9,15 +9,22 @@ If you want it to only have 1 slide in view on mobile, just style your childs to
 
 ### Getting started
 
+Install using npm:
+
 ```ssh
 $ npm install tnt-carousel
 ```
 
+Add it to your Javascript:
 ```javascript
 var Carousel = require('tnt-carousel');
-new Carousel($('#my-carousel'));
+new Carousel($('#my-carousel'), {
+	autoplay: true,
+	autoplayInterval: 5000
+});
 ```
 
+Add your HTML markup:
 ```html
 <div id="my-carousel">
 	<div>This is slide #1</div>
@@ -28,6 +35,35 @@ new Carousel($('#my-carousel'));
 	<div>This is slide #6</div>
 	<div>This is slide #7</div>
 </div>
+```
+
+Add some super basic styling to get started
+```css
+#my-carousel
+{
+	overflow: hidden;
+	position: relative;
+}
+
+#my-carousel li
+{
+	float: left;
+	width: 25%;
+	height: 300px;
+}
+
+#my-carousel .carousel-prev-button,
+#my-carousel .carousel-next-button
+{
+	position: absolute;
+	top: 50%;
+	width: 30px;
+	height: 30px;
+	margin-top: -15px;
+}
+
+#my-carousel .carousel-prev-button { left: 0; }
+#my-carousel .carousel-next-button { right: 0; }
 ```
 
 ### Options
