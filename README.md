@@ -52,8 +52,8 @@ Add some super basic styling to get started
 	height: 300px;
 }
 
-#my-carousel .carousel-prev-button,
-#my-carousel .carousel-next-button
+.carousel-prev-button,
+.carousel-next-button
 {
 	position: absolute;
 	top: 50%;
@@ -62,8 +62,8 @@ Add some super basic styling to get started
 	margin-top: -15px;
 }
 
-#my-carousel .carousel-prev-button { left: 0; }
-#my-carousel .carousel-next-button { right: 0; }
+.carousel-prev-button { left: 0; }
+.carousel-next-button { right: 0; }
 ```
 
 ### Options
