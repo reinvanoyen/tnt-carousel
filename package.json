@@ -1,6 +1,6 @@
 {
   "name": "tnt-carousel",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Super simple responsive carousel with touch support",
   "main": "src/index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/reinvo/tnt-carousel.git"
+    "url": "https://github.com/reinvanoyen/tnt-carousel.git"
   },
   "license": "MIT",
   "_id": "tnt-carousel@1.0.2",

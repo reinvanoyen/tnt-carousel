@@ -24,7 +24,8 @@ new Carousel($('#my-carousel'), {
 });
 ```
 
-Add your HTML markup:
+Add your HTML markup. Note that you can use any structure you want, as long as it's an element containing childs as slides.
+Using an unordered list or a section containing multiple articles are also good options.
 ```html
 <div id="my-carousel">
 	<div>This is slide #1</div>
@@ -37,15 +38,16 @@ Add your HTML markup:
 </div>
 ```
 
-Add some super basic styling to get started
+Add some super basic styling to get started. Don't forget to add your transition to the container!
 ```css
 #my-carousel
 {
 	overflow: hidden;
 	position: relative;
+	transition: transform .5s;
 }
 
-#my-carousel li
+#my-carousel div
 {
 	float: left;
 	width: 25%;
