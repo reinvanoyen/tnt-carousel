@@ -12,14 +12,14 @@ var
 
 gulp.task( 'watch', function()
 {
-	watch( 'example/sass/*.scss', function()
+	watch( 'sass/**/*.scss', function()
 	{
 		gulp.start( 'sass' );
 	} );
 
-	watch( 'example/example.js', function()
+	watch( 'js/app.js', function()
 	{
-		gulp.start( 'build-example' );
+		gulp.start( 'build-site' );
 	} );
 
 	watch( 'src/**/*.js', function()
@@ -29,18 +29,18 @@ gulp.task( 'watch', function()
 } );
 
 gulp.task( 'sass', function() {
-	return gulp.src( 'example/sass/**/*.scss' )
+	return gulp.src( 'sass/**/*.scss' )
 		.pipe( sass() )
 		.pipe( autoprefixer( 'last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1' ) )
-		.pipe( gulp.dest( 'example/style' ) )
+		.pipe( gulp.dest( 'style' ) )
 	;
 } );
 
-gulp.task( 'build-example', function() {
-	return browserify( 'example/example.js')
+gulp.task( 'build-site', function() {
+	return browserify( 'js/app.js')
 		.bundle()
-		.pipe( source( 'example-build.js' ) )
-		.pipe( gulp.dest( 'example' ) )
+		.pipe( source( 'build.js' ) )
+		.pipe( gulp.dest( 'js' ) )
 		.pipe( buffer() )
 		.pipe( uglify() )
 	;

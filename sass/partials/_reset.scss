@@ -1,0 +1,43 @@
+*
+{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-size: 100%;
+	font-weight: inherit;
+	font-style: inherit;
+}
+
+a
+{
+	text-decoration: none;
+	color: inherit;
+	font-weight: inherit;
+}
+
+li
+{
+	list-style: none;
+}
+
+fieldset
+{
+	border: 0;
+}
+
+button
+{
+	border: 0;
+	background: transparent;
+	text-align: left;
+}
+
+*:focus
+{
+	outline: none;
+}
+
+button, input, textarea
+{
+	font: inherit;
+}

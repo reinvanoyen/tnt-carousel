@@ -1,0 +1,11 @@
+.wrap
+{
+	padding: 0 $rule;
+	margin: 0 auto;
+
+	@media screen and ( min-width: $breakpoint1 )
+	{
+		padding: 0;
+		width: 85%;
+	}
+}
