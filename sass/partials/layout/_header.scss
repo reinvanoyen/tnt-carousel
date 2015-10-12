@@ -1,4 +1,16 @@
 #wrapper>header
 {
 	padding: $rule 0;
+	height: 100vh;
+	background-image: url( 'img/header.jpg' );
+	background-size: cover;
+	background-repeat: no-repeat;
+
+	h1, h2
+	{
+		font-family: $title_font;
+	}
+
+	h1 { @include font-size( 2 ); }
+	h2 { @include font-size( 5 ); }
 }

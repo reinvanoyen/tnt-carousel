@@ -3,11 +3,7 @@ var Carousel = require( '../src/index.js' );
 
 $( document ).ready( function() {
 
-	var carousel1 = new Carousel( $( 'ul.no-images' ) );
-	var carousel2 = new Carousel( $( 'ul.images' ) );
-	var carousel3 = new Carousel( $( 'ul.padding' ), {
-		arrowButtons: false
+	$( '.carousel' ).each( function() {
+		var carousel = new Carousel( $( this ) );
 	} );
-
-	var carousel4 = new Carousel( $( '.example' ) );
 } );
