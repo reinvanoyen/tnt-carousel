@@ -1,0 +1,13 @@
+.carousel
+{
+	overflow: hidden;
+	transition: transform 1s;
+
+	li
+	{
+		display: block;
+		width: 25%;
+		height: 200px;
+		background-color: #f0f0f0;
+	}
+}

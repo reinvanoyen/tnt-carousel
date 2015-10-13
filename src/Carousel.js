@@ -1,6 +1,6 @@
 /*
 
-TNT CAROUSEL
+tnt-carousel
 ------------
 
 Author: Rein Van Oyen <rein@tnt.be>
@@ -12,60 +12,66 @@ Issues: http://github.com/ReinVO/tnt-carousel/issues
 
 "use strict";
 
-var $ = require( 'jquery' );
 var utils = require( './utils.js' );
 
-var defaultOptions = {
-	autoplay: false,
-	playInterval: 4000,
-	touchEvents: true,
-	arrowButtons: true,
-	previousArrowClass: 'carousel-prev-button',
-	nextArrowClass: 'carousel-next-button',
-	loadedClass: 'loaded',
-	activeSlideClass: 'active',
-	thresshold: .1
-};
+var Carousel = function( element, options ) {
+	
+	var defaultOptions = {
+		autoplay: false,
+		playInterval: 4000,
+		touchEvents: true,
+		arrowButtons: true,
+		previousArrowClass: 'carousel-prev-button',
+		nextArrowClass: 'carousel-next-button',
+		loadedClass: 'loaded',
+		activeSlideClass: 'active',
+		thresshold: .1
+	};
 
-var Carousel = function( $element, options ) {
-
-	this.$element = $element;
 	this.options = $.extend( defaultOptions, options );
 
-	this.$slides = this.$element.children();
+	this._element = element;
+	this._slides = this._element.children;
 
-	this.amountOfSlides = this.$slides.length;
+	this.amountOfSlides = this._slides.length;
+
 	this.activeSlideIndex = 0;
 	this.translateX = 0;
 	this.dragDistance = 0;
 	this.dragDuration = 0;
 	this.isBuilt = false;
 
+	this.build();
+	/*
 	var that = this;
+
 	utils.loadImages( this.$element.find( 'img' ), function() {
 		that.build();
 	} );
+	*/
 };
 
 Carousel.prototype.build = function() {
 
 	if( ! this.isBuilt ) {
 
-		this.$wrap = this.$element.wrap( '<div>' ).parent();
-		this.$element.addClass( this.options.loadedClass );
-		this.$firstSlide = this.$slides.eq( 0 );
+		this._wrap = document.createElement( 'div' );
+		this._element.parentElement.appendChild( this._wrap );
+		this._wrap.appendChild( this._element );
+
+		this._element.classList.add( this.options.loadedClass );
+		this._firstSlide = this._slides[ 0 ];
 
 		if( this.options.arrowButtons ) {
 
-			this.$prevButton = $( '<button>' )
-				.addClass( this.options.previousArrowClass )
-				.appendTo( this.$wrap )
-			;
+			this._prevButton = document.createElement( 'button' );
+			this._prevButton.classList.add( this.options.previousArrowClass );
+			
+			this._nextButton = document.createElement( 'button' );
+			this._nextButton.classList.add( this.options.nextArrowClass );
 
-			this.$nextButton = $( '<button>' )
-				.addClass( this.options.nextArrowClass )
-				.appendTo( this.$wrap )
-			;
+			this._wrap.appendChild( this._prevButton );
+			this._wrap.appendChild( this._nextButton );
 		}
 
 		this.refresh();
@@ -77,12 +83,14 @@ Carousel.prototype.build = function() {
 
 		this.isBuilt = true;
 	}
+
 };
 
 Carousel.prototype.destroy = function() {
 
 	if( this.isBuilt ) {
-
+		
+		/*
 		this.$element.unwrap();
 		this.$element.removeClass( this.options.loadedClass );
 
@@ -101,6 +109,7 @@ Carousel.prototype.destroy = function() {
 		this.unbindEvents();
 
 		this.isBuilt = false;
+		*/
 	}
 };
 
@@ -108,23 +117,24 @@ Carousel.prototype.bindEvents = function() {
 
 	var that = this;
 
-	$( window ).resize( function() {
-		that.refresh();
-	} );
+	var refresh = this.refresh;
+
+	window.addEventListener( "resize", refresh );
 
 	if( this.options.arrowButtons ) {
 
-		this.$prevButton.click( function() {
+		this._prevButton.addEventListener( "click", function() {
 			that.goToPrevious();
 			that.pause();
 		} );
 
-		this.$nextButton.click( function() {
+		this._nextButton.addEventListener( "click", function() {
 			that.goToNext();
 			that.pause();
 		} );
 	}
 
+	/*
 	$( document ).keydown( function( e ) {
 		if( e.keyCode === 37 ) {
 			that.goToPrevious();
@@ -166,40 +176,45 @@ Carousel.prototype.bindEvents = function() {
 			that.dragDuration = 0;
 		} );
 	}
+	*/
 };
 
 Carousel.prototype.unbindEvents = function() {
-
+	/*
 	$( window ).unbind( 'resize' );
 	$( document ).unbind( 'keydown' );
-
+	*/
 };
 
 Carousel.prototype.setTransitionTimingFunction = function( easing ) {
+	/*
 	this.$element.css( {
 		'transition-timing-function': easing,
 		'-moz-transition-timing-function': easing,
 		'-webkit-transition-timing-function': easing
 	} );
+	*/
 };
 
 Carousel.prototype.setTransitionDuration = function( n ) {
-
+	/*
 	this.$element.css( {
 		'transition-duration': n + 'ms',
 		'-moz-transition-duration': n + 'ms',
 		'-webkit-transition-duration': n + 'ms'
 	} );
+	*/
 };
 
 Carousel.prototype.setTranslateX = function( n ) {
-
+	/*
 	this.translateX = n;
 	this.$element.css( {
 		'transform': 'translate3d( ' + this.translateX + 'px, 0, 0 )',
 		'-moz-transform': 'translate3d( ' + this.translateX + 'px, 0, 0 )',
 		'-webkit-transform': 'translate3d( ' + this.translateX + 'px, 0, 0 )'
 	} );
+	*/
 };
 
 Carousel.prototype.adjustScrollPosition = function() {
@@ -238,7 +253,7 @@ Carousel.prototype.adjustScrollPosition = function() {
 };
 
 Carousel.prototype.refresh = function() {
-
+	/*
 	this.activeSlideIndex = 0;
 
 	this.$wrap.removeAttr( 'style' );
@@ -271,10 +286,11 @@ Carousel.prototype.refresh = function() {
 	} );
 
 	this.refreshState();
+	*/
 };
 
 Carousel.prototype.refreshState = function() {
-
+	/*
 	this.$slides
 		.removeClass( this.options.activeSlideClass )
 		.eq( this.activeSlideIndex )
@@ -287,10 +303,11 @@ Carousel.prototype.refreshState = function() {
 	this.isOnRightEdge = ( restSlides <= this.amountVisible );
 
 	this.refreshButtons();
+	*/
 };
 
 Carousel.prototype.refreshButtons = function() {
-
+	/*
 	if( this.options.arrowButtons ) {
 
 		this.$prevButton.removeClass( 'hide' );
@@ -304,6 +321,7 @@ Carousel.prototype.refreshButtons = function() {
 			this.$nextButton.addClass( 'hide' );
 		}
 	}
+	*/
 };
 
 Carousel.prototype.goToNext = function() {

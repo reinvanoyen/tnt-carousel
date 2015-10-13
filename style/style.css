@@ -62,3 +62,14 @@ h2 {
   #wrapper > header h2 {
     font-size: 50px;
     font-size: 5rem; }
+
+.carousel {
+  overflow: hidden;
+  transition: -webkit-transform 1s;
+  transition: transform 1s; }
+  .carousel
+li {
+    display: block;
+    width: 25%;
+    height: 200px;
+    background-color: #f0f0f0; }

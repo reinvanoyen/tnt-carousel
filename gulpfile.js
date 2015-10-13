@@ -24,7 +24,7 @@ gulp.task( 'watch', function()
 
 	watch( 'src/**/*.js', function()
 	{
-		gulp.start( 'build-example' );
+		gulp.start( 'build-site' );
 	} );
 } );
 
