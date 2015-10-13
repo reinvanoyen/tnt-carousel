@@ -2,13 +2,18 @@
 {
 	padding: $rule 0;
 	height: 100vh;
+	border: $rule solid $primary_color;
 	background-image: url( 'img/header.jpg' );
 	background-size: cover;
 	background-repeat: no-repeat;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
 	h1, h2
 	{
 		font-family: $title_font;
+		text-align: center;
 	}
 
 	h1 { @include font-size( 2 ); }

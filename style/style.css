@@ -39,12 +39,23 @@ button, input, textarea {
 #wrapper > header {
   padding: 30px 0;
   height: 100vh;
+  border: 30px solid #fff;
   background-image: url("img/header.jpg");
   background-size: cover;
-  background-repeat: no-repeat; }
+  background-repeat: no-repeat;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
   #wrapper > header h1, #wrapper > header
 h2 {
-    font-family: "Playfair Display", serif; }
+    font-family: "Playfair Display", serif;
+    text-align: center; }
   #wrapper > header h1 {
     font-size: 20px;
     font-size: 2rem; }
