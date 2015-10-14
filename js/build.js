@@ -9238,20 +9238,19 @@ Issues: http://github.com/ReinVO/tnt-carousel/issues
 var utils = require( './utils.js' );
 
 var Carousel = function( element, options ) {
-	
-	var defaultOptions = {
-		autoplay: false,
-		playInterval: 4000,
-		touchEvents: true,
-		arrowButtons: true,
-		previousArrowClass: 'carousel-prev-button',
-		nextArrowClass: 'carousel-next-button',
-		loadedClass: 'loaded',
-		activeSlideClass: 'active',
-		thresshold: .1
-	};
 
-	this.options = $.extend( defaultOptions, options );
+	options = options || {};
+
+	this.options = {};
+	this.options.autoplay = options.autoplay || false;
+	this.options.playInterval = options.playinterval || 4000;
+	this.options.touchEvents = options.touchEvents || true;
+	this.options.arrowButtons = options.arrowButtons || true;
+	this.options.previousArrowClass = options.previousArrowClass || 'carousel-prev-button';
+	this.options.nextArrowClass = options.nextArrowClass || 'carousel-next-button';
+	this.options.loadedClass = options.loadedClass || 'loaded';
+	this.options.activeSlideClass = options.activeSlideClass || 'active';
+	this.options.thresshold = options.thresshold || 'thresshold';
 
 	this._element = element;
 	this._slides = this._element.children;
@@ -9342,23 +9341,22 @@ Carousel.prototype.bindEvents = function() {
 
 	var refresh = this.refresh;
 
-	window.addEventListener( "resize", refresh );
+	window.addEventListener( 'refresh', refresh );
 
 	if( this.options.arrowButtons ) {
 
-		this._prevButton.addEventListener( "click", function() {
+		this._prevButton.addEventListener( 'click', function() {
 			that.goToPrevious();
 			that.pause();
 		} );
 
-		this._nextButton.addEventListener( "click", function() {
+		this._nextButton.addEventListener( 'click', function() {
 			that.goToNext();
 			that.pause();
 		} );
 	}
 
-	/*
-	$( document ).keydown( function( e ) {
+	document.addEventListener( 'keydown', function( e ) {
 		if( e.keyCode === 37 ) {
 			that.goToPrevious();
 			that.pause();
@@ -9376,22 +9374,22 @@ Carousel.prototype.bindEvents = function() {
 			startTime
 		;
 
-		this.$wrap.bind( 'touchstart', function( e ) {
-			var event = e.originalEvent.changedTouches[ 0 ];
+		this._wrap.addEventListener( 'touchstart', function( e ) {
+			var event = e.changedTouches[ 0 ];
 			originalTranslateX = that.translateX;
 			startPosX = event.clientX;
 			startTime = Date.now();
 			that.setTransitionTimingFunction( 'ease' );
 		} );
 
-		this.$wrap.bind( 'touchmove', function( e ) {
-			var event = e.originalEvent.changedTouches[ 0 ];
+		this._wrap.addEventListener( 'touchmove', function( e ) {
+			var event = e.changedTouches[ 0 ];
 			that.dragDistance = event.clientX - startPosX;
 			that.setTranslateX( originalTranslateX + ( that.dragDistance ) );
 			e.preventDefault();
 		} );
 
-		this.$wrap.bind( 'touchend', function( e ) {
+		this._wrap.addEventListener( 'touchend', function( e ) {
 			that.setTransitionTimingFunction( '' );
 			that.dragDuration = ( Date.now() - startTime );
 			that.adjustScrollPosition();
@@ -9399,7 +9397,6 @@ Carousel.prototype.bindEvents = function() {
 			that.dragDuration = 0;
 		} );
 	}
-	*/
 };
 
 Carousel.prototype.unbindEvents = function() {
@@ -9410,34 +9407,26 @@ Carousel.prototype.unbindEvents = function() {
 };
 
 Carousel.prototype.setTransitionTimingFunction = function( easing ) {
-	/*
-	this.$element.css( {
-		'transition-timing-function': easing,
-		'-moz-transition-timing-function': easing,
-		'-webkit-transition-timing-function': easing
-	} );
-	*/
+
+	this._element.style.transitionTimingFunction = easing;
+	this._element.style.mozTransitionTimingFunction = easing;
+	this._element.style.webkitTransitionTimingFunction = easing;
 };
 
 Carousel.prototype.setTransitionDuration = function( n ) {
-	/*
-	this.$element.css( {
-		'transition-duration': n + 'ms',
-		'-moz-transition-duration': n + 'ms',
-		'-webkit-transition-duration': n + 'ms'
-	} );
-	*/
+
+	this._element.style.transitionDuration = n + 'ms';
+	this._element.style.mozTransitionDuration = n + 'ms';
+	this._element.style.webkitTransitionDuration = n + 'ms';
 };
 
 Carousel.prototype.setTranslateX = function( n ) {
-	/*
+
 	this.translateX = n;
-	this.$element.css( {
-		'transform': 'translate3d( ' + this.translateX + 'px, 0, 0 )',
-		'-moz-transform': 'translate3d( ' + this.translateX + 'px, 0, 0 )',
-		'-webkit-transform': 'translate3d( ' + this.translateX + 'px, 0, 0 )'
-	} );
-	*/
+
+	this._element.style.transform = 'translate3d('+this.translateX+'px, 0, 0)';
+	this._element.style.mozTransform = 'translate3d('+this.translateX+'px, 0, 0)';
+	this._element.style.webkitTransform = 'translate3d('+this.translateX+'px, 0, 0)';
 };
 
 Carousel.prototype.adjustScrollPosition = function() {
@@ -9476,19 +9465,23 @@ Carousel.prototype.adjustScrollPosition = function() {
 };
 
 Carousel.prototype.refresh = function() {
-	/*
+
 	this.activeSlideIndex = 0;
+	
+	for( var i = 0; i < this._slides.length; i++ ) {
+		this._slides[ i ].removeAttribute( 'style' );
+	}
 
-	this.$wrap.removeAttr( 'style' );
-	this.$slides.removeAttr( 'style' );
-	this.$element.removeAttr( 'style' );
+	this._wrap.removeAttribute( 'style' );
+	this._element.removeAttribute( 'style' );
 
-	this.elementWidth = this.$element[0].getBoundingClientRect().width;
-	this.slideWidth = this.$firstSlide[0].getBoundingClientRect().width;
-	this.slideHeight = this.$firstSlide[0].getBoundingClientRect().height;
+	this.elementWidth = this._element.offsetWidth;
+	this.slideWidth = this._firstSlide.offsetWidth;
+	this.slideHeight = this._firstSlide.offsetHeight;
 	this.amountVisible = Math.ceil( this.elementWidth / this.slideWidth );
 	this.totalWidth = ( this.amountOfSlides * this.slideWidth );
 
+	/*
 	this.$wrap.css( {
 		position: 'relative',
 		overflow: 'hidden',
@@ -9507,66 +9500,76 @@ Carousel.prototype.refresh = function() {
 	this.$wrap.css( {
 		width: this.elementWidth
 	} );
+	*/
+
+	this._wrap.style.width = this.elementWidth + 'px';
+	this._wrap.style.position = 'relative';
+	this._wrap.style.overflow = 'hidden';
+	this._wrap.style.height = this.slideHeight + 'px';
+	this._wrap.style.width = this.elementWidth + 'px';
+
+	this._element.style.width = this.totalWidth;
+
+	for( var i = 0; i < this._slides.length; i++ ) {
+		this._slides[ i ].style.float = 'left';
+		this._slides[ i ].style.width = this.slideWidth + 'px';
+	}
 
 	this.refreshState();
-	*/
 };
 
 Carousel.prototype.refreshState = function() {
-	/*
-	this.$slides
-		.removeClass( this.options.activeSlideClass )
-		.eq( this.activeSlideIndex )
-		.addClass( this.options.activeSlideClass )
-	;
+
+	for( var i = 0; i < this._slides.length; i++ ) {
+		this._slides[ i ].classList.remove( this.options.activeSlideClass );
+	}
+
+	this._slides[ this.activeSlideIndex ].classList.add( this.options.activeSlideClass );
 
 	this.isOnLeftEdge = ( this.activeSlideIndex === 0 );
-	
+
 	var restSlides = this.amountOfSlides - this.activeSlideIndex;
 	this.isOnRightEdge = ( restSlides <= this.amountVisible );
 
 	this.refreshButtons();
-	*/
 };
 
 Carousel.prototype.refreshButtons = function() {
-	/*
+
 	if( this.options.arrowButtons ) {
 
-		this.$prevButton.removeClass( 'hide' );
-		this.$nextButton.removeClass( 'hide' );
+		this._prevButton.classList.remove( 'hide' );
+		this._nextButton.classList.remove( 'hide' );
 
 		if( this.isOnLeftEdge ) {
-			this.$prevButton.addClass( 'hide' );
+			this._prevButton.classList.add( 'hide' );
 		}
 
 		if( this.isOnRightEdge ) {
-			this.$nextButton.addClass( 'hide' );
+			this._nextButton.classList.add( 'hide' );
 		}
 	}
-	*/
 };
 
 Carousel.prototype.goToNext = function() {
 
 	this.goTo( this.activeSlideIndex + 1 );
-
 };
 
 Carousel.prototype.goToPrevious = function() {
 
 	this.goTo( this.activeSlideIndex - 1 );
-
 };
 
 Carousel.prototype.goTo = function( n ) {
 
 	if( n >= 0 && n < this.amountOfSlides ) {
+
 		this.activeSlideIndex = n;
 
 		var translateX = Math.max( -( this.activeSlideIndex * this.slideWidth ), -( this.totalWidth - this.elementWidth ) );
 		translateX = Math.min( 0, translateX );
-		
+
 		this.setTranslateX( translateX );
 		this.refreshState();
 	}
@@ -9589,13 +9592,11 @@ Carousel.prototype.play = function() {
 		that.goToNext();
 
 	}, this.options.playInterval );
-
 };
 
 Carousel.prototype.pause = function() {
 
 	clearInterval( this.playInterval );
-
 };
 
 module.exports = Carousel;
