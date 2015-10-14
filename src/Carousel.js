@@ -258,34 +258,12 @@ Carousel.prototype.refresh = function() {
 	this.amountVisible = Math.ceil( this.elementWidth / this.slideWidth );
 	this.totalWidth = ( this.amountOfSlides * this.slideWidth );
 
-	/*
-	this.$wrap.css( {
-		position: 'relative',
-		overflow: 'hidden',
-		height: this.slideHeight
-	} );
-
-	this.$element.css( {
-		width: this.totalWidth
-	} );
-
-	this.$slides.css( {
-		float: 'left',
-		width: this.slideWidth
-	} );
-
-	this.$wrap.css( {
-		width: this.elementWidth
-	} );
-	*/
-
 	this._wrap.style.width = this.elementWidth + 'px';
 	this._wrap.style.position = 'relative';
 	this._wrap.style.overflow = 'hidden';
 	this._wrap.style.height = this.slideHeight + 'px';
-	this._wrap.style.width = this.elementWidth + 'px';
 
-	this._element.style.width = this.totalWidth;
+	this._element.style.width = this.totalWidth + 'px';
 
 	for( var i = 0; i < this._slides.length; i++ ) {
 		this._slides[ i ].style.float = 'left';

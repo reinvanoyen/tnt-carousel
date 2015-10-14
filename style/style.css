@@ -51,7 +51,8 @@ button, input, textarea {
           align-items: center;
   -webkit-justify-content: center;
       -ms-flex-pack: center;
-          justify-content: center; }
+          justify-content: center;
+  display: none; }
   #wrapper > header h1, #wrapper > header
 h2 {
     font-family: "Playfair Display", serif;
