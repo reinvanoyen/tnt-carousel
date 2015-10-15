@@ -12,6 +12,10 @@ Issues: http://github.com/ReinVO/tnt-carousel/issues
 
 "use strict";
 
+var removeElement = function( element ) {
+	element && element.parentNode && element.parentNode.removeChild( element );
+};
+
 var Carousel = function( element, options ) {
 
 	options = options || {};
@@ -82,20 +86,19 @@ Carousel.prototype.destroy = function() {
 		
 		/*
 		this.$element.unwrap();
-		this.$element.removeClass( this.options.loadedClass );
-
-		this.$slides.removeAttr( 'style' );
-		this.$element.removeAttr( 'style' );
+		*/
+		
+		this._element.removeAttribute( 'style' );
+		this._element.classList.remove( this.options.loadedClass );
 
 		if( this.options.arrowButtons ) {
 
-			this.$prevButton.remove();
-			this.$nextButton.remove();
+			removeElement( this._prevButton );
+			removeElement( this._nextButton );
 		}
 
-		*/
-
 		for( var i = 0; i < this._slides.length; i++ ) {
+			this._slides[ i ].removeAttribute( 'style' );
 			this._slides[ i ].classList.remove( this.options.activeSlideClass );
 		}
 
