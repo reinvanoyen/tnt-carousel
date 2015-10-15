@@ -18,7 +18,7 @@ $ npm install tnt-carousel
 Add it to your Javascript:
 ```javascript
 var Carousel = require('tnt-carousel');
-new Carousel($('#my-carousel'), {
+new Carousel(document.getElementById( 'carousel' ), {
 	autoplay: true,
 	autoplayInterval: 5000
 });
@@ -89,7 +89,7 @@ activeSlideClass | string | active | The currently active slide will have this c
 Build the carousel. Gets called automatically upon creating an instance. Useful to rebuild previously destroyed carousels.
 
 ```javascript
-var carousel = new Carousel($('#my-carousel'));
+var carousel = new Carousel(document.getElementById( 'carousel' ));
 carousel.destroy();
 carousel.build();
 ```
