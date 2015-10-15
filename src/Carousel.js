@@ -150,16 +150,18 @@ Carousel.prototype.bindEvents = function() {
 			originalTranslateX = that.translateX;
 			startPosX = event.clientX;
 			startTime = Date.now();
-			that.setTransitionTimingFunction( 'ease' );
+			that.setTransition( 'none' );
 		} );
 
 		this._wrap.addEventListener( 'touchmove', function( e ) {
 			var event = e.changedTouches[ 0 ];
 			that.dragDistance = event.clientX - startPosX;
 			that.setTranslateX( originalTranslateX + ( that.dragDistance ) );
+			e.preventDefault();
 		} );
 
 		this._wrap.addEventListener( 'touchend', function( e ) {
+			that.setTransition( '' );
 			that.setTransitionTimingFunction( '' );
 			that.dragDuration = ( Date.now() - startTime );
 			that.adjustScrollPosition();
@@ -173,6 +175,13 @@ Carousel.prototype.unbindEvents = function() {
 
 	window.removeEventListener( 'resize' );
 	document.removeEventListener( 'keydown' );
+};
+
+Carousel.prototype.setTransition = function( transition ) {
+
+	this._element.style.transition = transition;
+	this._element.style.webkitTransition = transition;
+	this._element.style.mozTransition = transition;
 };
 
 Carousel.prototype.setTransitionTimingFunction = function( easing ) {
@@ -206,7 +215,7 @@ Carousel.prototype.adjustScrollPosition = function() {
 
 		var speed = ( this.dragDuration / absoluteDistance );
 	
-		this.setTransitionDuration( speed * 1000 );
+		this.setTransitionDuration( speed * 200 );
 
 		var amountOfSlidesDragged = Math.ceil( absoluteDistance / this.slideWidth );
 
