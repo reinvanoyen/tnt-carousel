@@ -9248,7 +9248,7 @@ var Carousel = function( element, options ) {
 	this.options.nextArrowClass = options.nextArrowClass || 'carousel-next-button';
 	this.options.loadedClass = options.loadedClass || 'loaded';
 	this.options.activeSlideClass = options.activeSlideClass || 'active';
-	this.options.thresshold = options.thresshold || 'thresshold';
+	this.options.thresshold = options.thresshold || .1;
 
 	this._element = element;
 	this._slides = this._element.children;
@@ -9380,7 +9380,6 @@ Carousel.prototype.bindEvents = function() {
 			var event = e.changedTouches[ 0 ];
 			that.dragDistance = event.clientX - startPosX;
 			that.setTranslateX( originalTranslateX + ( that.dragDistance ) );
-			e.preventDefault();
 		} );
 
 		this._wrap.addEventListener( 'touchend', function( e ) {
@@ -9498,9 +9497,7 @@ Carousel.prototype.refreshState = function() {
 	this._slides[ this.activeSlideIndex ].classList.add( this.options.activeSlideClass );
 
 	this.isOnLeftEdge = ( this.activeSlideIndex === 0 );
-
-	var restSlides = this.amountOfSlides - this.activeSlideIndex;
-	this.isOnRightEdge = ( restSlides <= this.amountVisible );
+	this.isOnRightEdge = ( ( this.amountOfSlides - this.activeSlideIndex ) <= this.amountVisible );
 
 	this.refreshButtons();
 };
