@@ -1,6 +1,6 @@
 {
   "name": "tnt-carousel",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Super simple responsive carousel with touch support",
   "main": "src/index.js",
   "scripts": {
@@ -8,7 +8,6 @@
   },
   "keywords": [
     "carousel",
-    "jquery",
     "swipe",
     "gallery",
     "photo",
@@ -33,9 +32,8 @@
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.0.2",
     "gulp-sass": "^2.0.4",
-    "gulp-uglify": "^1.4.1",
+    "gulp-uglify": "^1.4.2",
     "gulp-watch": "^4.3.5",
-    "jquery": "^2.1.4",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   }

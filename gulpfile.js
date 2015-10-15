@@ -43,6 +43,7 @@ gulp.task( 'build-site', function() {
 		.pipe( gulp.dest( 'js' ) )
 		.pipe( buffer() )
 		.pipe( uglify() )
+		.pipe( gulp.dest( 'js' ) )
 	;
 } );
 
