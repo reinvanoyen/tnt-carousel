@@ -12,8 +12,6 @@ Issues: http://github.com/ReinVO/tnt-carousel/issues
 
 "use strict";
 
-var utils = require( './utils.js' );
-
 var Carousel = function( element, options ) {
 
 	options = options || {};
@@ -41,13 +39,6 @@ var Carousel = function( element, options ) {
 	this.isBuilt = false;
 
 	this.build();
-	/*
-	var that = this;
-
-	utils.loadImages( this.$element.find( 'img' ), function() {
-		that.build();
-	} );
-	*/
 };
 
 Carousel.prototype.build = function() {
@@ -102,13 +93,16 @@ Carousel.prototype.destroy = function() {
 			this.$nextButton.remove();
 		}
 
-		this.$slides.removeClass( this.options.activeSlideClass );
+		*/
+
+		for( var i = 0; i < this._slides.length; i++ ) {
+			this._slides[ i ].classList.remove( this.options.activeSlideClass );
+		}
 
 		this.pause();
 		this.unbindEvents();
 
 		this.isBuilt = false;
-		*/
 	}
 };
 
@@ -116,9 +110,9 @@ Carousel.prototype.bindEvents = function() {
 
 	var that = this;
 
-	var refresh = this.refresh;
-
-	window.addEventListener( 'refresh', refresh );
+	window.addEventListener( 'resize', function() {
+		that.refresh();
+	} );
 
 	if( this.options.arrowButtons ) {
 
@@ -177,10 +171,9 @@ Carousel.prototype.bindEvents = function() {
 };
 
 Carousel.prototype.unbindEvents = function() {
-	/*
-	$( window ).unbind( 'resize' );
-	$( document ).unbind( 'keydown' );
-	*/
+
+	window.removeEventListener( 'resize' );
+	document.removeEventListener( 'keydown' );
 };
 
 Carousel.prototype.setTransitionTimingFunction = function( easing ) {
