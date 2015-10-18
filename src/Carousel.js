@@ -5,8 +5,8 @@ tnt-carousel
 
 Author: Rein Van Oyen <rein@tnt.be>
 Website: http://www.tnt.be
-Repo: http://github.com/ReinVO/tnt-carousel
-Issues: http://github.com/ReinVO/tnt-carousel/issues
+Repo: http://github.com/reinvanoyen/tnt-carousel
+Issues: http://github.com/reinvanoyen/tnt-carousel/issues
 
 */
 
@@ -20,16 +20,20 @@ var Carousel = function( element, options ) {
 
 	options = options || {};
 
-	this.options = {};
-	this.options.autoplay = options.autoplay || false;
-	this.options.playInterval = options.playinterval || 4000;
-	this.options.touchEvents = options.touchEvents || true;
-	this.options.arrowButtons = options.arrowButtons || true;
-	this.options.previousArrowClass = options.previousArrowClass || 'carousel-prev-button';
-	this.options.nextArrowClass = options.nextArrowClass || 'carousel-next-button';
-	this.options.loadedClass = options.loadedClass || 'loaded';
-	this.options.activeSlideClass = options.activeSlideClass || 'active';
-	this.options.thresshold = options.thresshold || .1;
+	this.options = {
+		autoplay: options.autoplay || false,
+		playInterval: options.playinterval || 4000,
+		touchSwipe: options.touchSwipe || true,
+		mouseSwipe: options.mouseSwipe || true,
+		keyEvents: options.keyEvents || false,
+		arrowButtons: options.arrowButtons || true,
+		previousArrowClass: options.previousArrowClass || 'carousel-prev-button',
+		nextArrowClass: options.nextArrowClass || 'carousel-next-button',
+		inactiveArrowClass: options.inactiveArrowClass || 'hide',
+		loadedClass: options.loadedClass || 'loaded',
+		activeSlideClass: options.activeSlideClass || 'active',
+		edgeFriction: options.edgeFriction || .1
+	};
 
 	this._element = element;
 	this._slides = this._element.children;
@@ -113,64 +117,97 @@ Carousel.prototype.bindEvents = function() {
 
 	var that = this;
 
-	window.addEventListener( 'resize', function() {
+	var refresh = function( e ) {
 		that.refresh();
-	} );
+	};
 
-	if( this.options.arrowButtons ) {
+	var nextArrowClick = function( e ) {
+		that.pause();
+		that.goToNext();
+	};
 
-		this._prevButton.addEventListener( 'click', function() {
-			that.goToPrevious();
-			that.pause();
-		} );
+	var prevArrowClick = function( e ) {
+		that.pause();
+		that.goToPrevious();
+	};
 
-		this._nextButton.addEventListener( 'click', function() {
-			that.goToNext();
-			that.pause();
-		} );
-	}
-
-	document.addEventListener( 'keydown', function( e ) {
+	var keyDown = function( e ) {
 		if( e.keyCode === 37 ) {
-			that.goToPrevious();
 			that.pause();
+			that.goToPrevious();
 		}
 		else if( e.keyCode === 39 ) {
-			that.goToNext();
 			that.pause();
+			that.goToNext();
 		}
-	} );
+	};
 
-	if( this.options.touchEvents ) {
+	var originalTranslateX,
+		startPosX,
+		startTime,
+		isDragging
+	;
 
-		var originalTranslateX,
-			startPosX,
-			startTime
-		;
+	var dragStart = function( e ) {
+		isDragging = true;
+		
+		var event = e;
+		if( e.changedTouches ) {
+			event = e.changedTouches[ 0 ];
+		}
+		originalTranslateX = that.translateX;
+		startPosX = event.clientX;
+		startTime = Date.now();
+		that.setTransition( 'none' );
+	};
 
-		this._wrap.addEventListener( 'touchstart', function( e ) {
-			var event = e.changedTouches[ 0 ];
-			originalTranslateX = that.translateX;
-			startPosX = event.clientX;
-			startTime = Date.now();
-			that.setTransition( 'none' );
-		} );
-
-		this._wrap.addEventListener( 'touchmove', function( e ) {
-			var event = e.changedTouches[ 0 ];
+	var dragMove = function( e ) {
+		if( isDragging ) {
+			var event = e;
+			if( e.changedTouches ) {
+				event = e.changedTouches[ 0 ];
+			}
 			that.dragDistance = event.clientX - startPosX;
 			that.setTranslateX( originalTranslateX + ( that.dragDistance ) );
 			e.preventDefault();
-		} );
+		}
+	};
 
-		this._wrap.addEventListener( 'touchend', function( e ) {
-			that.setTransition( '' );
-			that.setTransitionTimingFunction( '' );
-			that.dragDuration = ( Date.now() - startTime );
-			that.adjustScrollPosition();
-			that.dragDistance = 0;
-			that.dragDuration = 0;
-		} );
+	var dragEnd = function( e ) {
+		isDragging = false;
+		that.setTransition( '' );
+		that.setTransitionTimingFunction( '' );
+		that.dragDuration = ( Date.now() - startTime );
+		that.adjustScrollPosition();
+		that.dragDistance = 0;
+		that.dragDuration = 0;
+	};
+
+	window.addEventListener( 'resize', refresh );
+
+	if( this.options.touchSwipe ) {
+
+		this._wrap.addEventListener( 'touchstart', dragStart );
+		this._wrap.addEventListener( 'touchmove', dragMove );
+		this._wrap.addEventListener( 'touchend', dragEnd );
+	}
+
+	if( this.options.mouseSwipe ) {
+		
+		this._wrap.addEventListener( 'mousedown', dragStart );
+		this._wrap.addEventListener( 'mousemove', dragMove );
+		this._wrap.addEventListener( 'mouseup', dragEnd );
+	}
+
+	if( this.options.keyEvents ) {
+
+		document.addEventListener( 'keydown',  keyDown );
+	}
+
+	if( this.options.arrowButtons ) {
+
+		this._prevButton.addEventListener( 'click', prevArrowClick );
+		this._nextButton.addEventListener( 'click', nextArrowClick );
 	}
 };
 
@@ -214,7 +251,7 @@ Carousel.prototype.adjustScrollPosition = function() {
 
 	var absoluteDistance = Math.abs( this.dragDistance );
 
-	if( absoluteDistance >  ( this.slideWidth * this.options.thresshold ) ) {
+	if( absoluteDistance >  ( this.slideWidth * this.options.edgeFriction ) ) {
 
 		var speed = ( this.dragDuration / absoluteDistance );
 	
