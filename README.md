@@ -18,7 +18,7 @@ $ npm install tnt-carousel
 Add it to your Javascript:
 ```javascript
 var Carousel = require('tnt-carousel');
-new Carousel(document.getElementById( 'carousel' ), {
+new Carousel(document.getElementById( 'my-carousel' ), {
 	autoplay: true,
 	autoplayInterval: 5000
 });
