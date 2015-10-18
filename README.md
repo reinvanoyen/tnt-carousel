@@ -92,7 +92,7 @@ touchSwipe | boolean | true | Whether or not to use touch events for swiping
 Build the carousel. Gets called automatically upon creating an instance. Useful to rebuild previously destroyed carousels.
 
 ```javascript
-var carousel = new Carousel(document.getElementById( 'carousel' ));
+var carousel = new Carousel(document.getElementById( 'my-carousel' ));
 carousel.destroy();
 carousel.build();
 ```
