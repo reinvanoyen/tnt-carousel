@@ -76,7 +76,7 @@ var Carousel = function( element, options ) {
 	var that = this;
 
 	if( this.amountOfSlides > 0 ) {
-		
+
 		loadImages( this._element.getElementsByTagName( 'img' ), function() {
 			that.build();
 		} );
@@ -254,22 +254,31 @@ Carousel.prototype.unbindEvents = function() {
 Carousel.prototype.setTransition = function( transition ) {
 
 	this._element.style.transition = transition;
+
+	this._element.style.MozTransition = transition;
 	this._element.style.webkitTransition = transition;
-	this._element.style.mozTransition = transition;
+	this._element.style.msTransition = transition;
+	this._element.style.OTransition = transition;
 };
 
 Carousel.prototype.setTransitionTimingFunction = function( easing ) {
 
 	this._element.style.transitionTimingFunction = easing;
-	this._element.style.mozTransitionTimingFunction = easing;
+
+	this._element.style.MozTransitionTimingFunction = easing;
 	this._element.style.webkitTransitionTimingFunction = easing;
+	this._element.style.msTransitionTimingFunction = easing;
+	this._element.style.OTransitionTimingFunction = easing;
 };
 
 Carousel.prototype.setTransitionDuration = function( n ) {
 
 	this._element.style.transitionDuration = n + 'ms';
-	this._element.style.mozTransitionDuration = n + 'ms';
+
+	this._element.style.MozTransitionDuration = n + 'ms';
 	this._element.style.webkitTransitionDuration = n + 'ms';
+	this._element.style.msTransitionDuration = n + 'ms';
+	this._element.style.OTransitionDuration = n + 'ms';
 };
 
 Carousel.prototype.setTranslateX = function( n ) {
@@ -277,8 +286,11 @@ Carousel.prototype.setTranslateX = function( n ) {
 	this.translateX = n;
 
 	this._element.style.transform = 'translate3d('+this.translateX+'px, 0, 0)';
-	this._element.style.mozTransform = 'translate3d('+this.translateX+'px, 0, 0)';
+
+	this._element.style.MozTransform = 'translateX('+this.translateX+'px)';
 	this._element.style.webkitTransform = 'translate3d('+this.translateX+'px, 0, 0)';
+	this._element.style.msTransform = 'translateX('+this.translateX+'px)';
+	this._element.style.OTransform = 'translateX('+this.translateX+'px)';
 };
 
 Carousel.prototype.adjustScrollPosition = function() {
