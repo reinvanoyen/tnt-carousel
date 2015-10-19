@@ -74,9 +74,13 @@ var Carousel = function( element, options ) {
 	this.isBuilt = false;
 
 	var that = this;
-	loadImages( this._element.getElementsByTagName( 'img' ), function() {
-		that.build();
-	} );
+
+	if( this.amountOfSlides > 0 ) {
+		
+		loadImages( this._element.getElementsByTagName( 'img' ), function() {
+			that.build();
+		} );
+	}
 };
 
 Carousel.prototype.build = function() {
