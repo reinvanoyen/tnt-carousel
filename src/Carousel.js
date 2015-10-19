@@ -16,6 +16,33 @@ var removeElement = function( element ) {
 	element && element.parentNode && element.parentNode.removeChild( element );
 };
 
+var loadImages = function( _images, callback ) {
+
+	var amountLoaded = 0,
+		amountToLoad = _images.length
+	;
+
+	if( amountToLoad === 0 ) {
+		callback();
+	}
+
+	for( var i = 0; i < _images.length; i++ ) {
+
+		var image = new Image();
+
+		image.onload = function() {
+
+			amountLoaded++;
+
+			if( amountLoaded === amountToLoad ) {
+				callback();
+			}
+		}
+
+		image.src = _images[ i ].getAttribute( 'src' );
+	}
+};
+
 var Carousel = function( element, options ) {
 
 	options = options || {};
@@ -46,7 +73,10 @@ var Carousel = function( element, options ) {
 	this.dragDuration = 0;
 	this.isBuilt = false;
 
-	this.build();
+	var that = this;
+	loadImages( this._element.getElementsByTagName( 'img' ), function() {
+		that.build();
+	} );
 };
 
 Carousel.prototype.build = function() {
