@@ -54,7 +54,7 @@ Carousel.prototype.build = function() {
 	if( ! this.isBuilt ) {
 
 		this._wrap = document.createElement( 'div' );
-		this._element.parentElement.appendChild( this._wrap );
+		this._element.parentElement.insertBefore( this._wrap, this._element );
 		this._wrap.appendChild( this._element );
 
 		this._element.classList.add( this.options.loadedClass );
