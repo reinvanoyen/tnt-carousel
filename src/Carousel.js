@@ -12,7 +12,27 @@ Issues: http://github.com/reinvanoyen/tnt-carousel/issues
 
 "use strict";
 
+var extend = function( defaults, options ) {
+
+	var extended = {};
+	var prop;
+	for( prop in defaults ) {
+
+		if( Object.prototype.hasOwnProperty.call( defaults, prop ) ) {
+			extended[ prop ] = defaults[ prop ];
+		}
+	}
+	for( prop in options ) {
+
+		if( Object.prototype.hasOwnProperty.call( options, prop ) ) {
+			extended[ prop ] = options[ prop ];
+		}
+	}
+	return extended;
+};
+
 var removeElement = function( element ) {
+
 	element && element.parentNode && element.parentNode.removeChild( element );
 };
 
@@ -47,20 +67,22 @@ var Carousel = function( element, options ) {
 
 	options = options || {};
 
-	this.options = {
-		autoplay: options.autoplay || false,
-		playInterval: options.playinterval || 4000,
-		touchSwipe: options.touchSwipe || true,
-		mouseSwipe: options.mouseSwipe || true,
-		keyEvents: options.keyEvents || false,
-		arrowButtons: options.arrowButtons || true,
-		previousArrowClass: options.previousArrowClass || 'carousel-prev-button',
-		nextArrowClass: options.nextArrowClass || 'carousel-next-button',
-		inactiveArrowClass: options.inactiveArrowClass || 'hide',
-		loadedClass: options.loadedClass || 'loaded',
-		activeSlideClass: options.activeSlideClass || 'active',
-		edgeFriction: options.edgeFriction || .1
+	var DEFAULT_OPTIONS = {
+		autoplay: false,
+		playInterval: 4000,
+		touchSwipe: true,
+		mouseSwipe: true,
+		keyEvents: false,
+		arrowButtons: true,
+		previousArrowClass: 'carousel-prev-button',
+		nextArrowClass: 'carousel-next-button',
+		inactiveArrowClass: 'hide',
+		loadedClass: 'loaded',
+		activeSlideClass: 'active',
+		edgeFriction: .1
 	};
+
+	this.options = extend( DEFAULT_OPTIONS, options );
 
 	this._element = element;
 	this._slides = this._element.children;
