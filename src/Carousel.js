@@ -55,6 +55,7 @@ var loadImages = function( _images, callback ) {
 			amountLoaded++;
 
 			if( amountLoaded === amountToLoad ) {
+
 				callback();
 			}
 		}
@@ -132,6 +133,7 @@ Carousel.prototype.build = function() {
 		this.bindEvents();
 
 		if( this.options.autoplay ) {
+
 			this.play();
 		}
 
@@ -143,11 +145,7 @@ Carousel.prototype.build = function() {
 Carousel.prototype.destroy = function() {
 
 	if( this.isBuilt ) {
-		
-		/*
-		this.$element.unwrap();
-		*/
-		
+
 		this._element.removeAttribute( 'style' );
 		this._element.classList.remove( this.options.loadedClass );
 
@@ -352,44 +350,49 @@ Carousel.prototype.adjustScrollPosition = function() {
 
 Carousel.prototype.refresh = function() {
 
-	this.activeSlideIndex = 0;
+	var that = this;
 
-	for( var i = 0; i < this._slides.length; i++ ) {
-		this._slides[ i ].removeAttribute( 'style' );
+	that.activeSlideIndex = 0;
+
+	for( var i = 0; i < that._slides.length; i++ ) {
+
+		that._slides[ i ].removeAttribute( 'style' );
 	}
 
-	this._wrap.removeAttribute( 'style' );
-	this._element.removeAttribute( 'style' );
+	that._wrap.removeAttribute( 'style' );
+	that._element.removeAttribute( 'style' );
 
-	this.elementWidth = this._element.offsetWidth;
-	this.slideWidth = this._firstSlide.offsetWidth;
-	this.slideHeight = this._firstSlide.offsetHeight;
-	this.amountVisible = Math.ceil( this.elementWidth / this.slideWidth );
-	this.totalWidth = ( this.amountOfSlides * this.slideWidth );
+	that.elementWidth = that._element.offsetWidth;
+	that.slideWidth = that._firstSlide.offsetWidth;
+	that.slideHeight = that._firstSlide.offsetHeight;
+	that.amountVisible = Math.round( that.elementWidth / that.slideWidth );
 
-	this._wrap.style.width = this.elementWidth + 'px';
-	this._wrap.style.position = 'relative';
-	this._wrap.style.overflow = 'hidden';
-	this._wrap.style.height = this.slideHeight + 'px';
+	that.totalWidth = ( that.amountOfSlides * that.slideWidth );
 
-	this._element.style.width = this.totalWidth + 'px';
+	that._wrap.style.width = that.elementWidth + 'px';
+	that._wrap.style.position = 'relative';
+	that._wrap.style.overflow = 'hidden';
+	that._wrap.style.height = that.slideHeight + 'px';
 
-	for( var i = 0; i < this._slides.length; i++ ) {
-		this._slides[ i ].style.float = 'left';
-		this._slides[ i ].style.width = this.slideWidth + 'px';
+	that._element.style.width = that.totalWidth + 'px';
+
+	for( var i = 0; i < that._slides.length; i++ ) {
+
+		that._slides[ i ].style.float = 'left';
+		that._slides[ i ].style.width = that.slideWidth + 'px';
 	}
 
-	this.refreshState();
+	that.refreshState();
 };
 
 Carousel.prototype.refreshState = function() {
 
 	for( var i = 0; i < this._slides.length; i++ ) {
+
 		this._slides[ i ].classList.remove( this.options.activeSlideClass );
 	}
 
 	this._slides[ this.activeSlideIndex ].classList.add( this.options.activeSlideClass );
-
 	this.isOnLeftEdge = ( this.activeSlideIndex === 0 );
 	this.isOnRightEdge = ( ( this.amountOfSlides - this.activeSlideIndex ) <= this.amountVisible );
 

@@ -53,8 +53,7 @@ button, input, textarea {
       -ms-flex-pack: center;
           justify-content: center;
   display: none; }
-  #wrapper > header h1, #wrapper > header
-h2 {
+  #wrapper > header h1, #wrapper > header h2 {
     font-family: "Playfair Display", serif;
     text-align: center; }
   #wrapper > header h1 {
@@ -66,22 +65,22 @@ h2 {
 
 .carousel {
   overflow: hidden;
-  transition: -webkit-transform 0.5s ease-in;
-  transition: transform 0.5s ease-in; }
-  .carousel
-li {
+  transition: -webkit-transform .5s ease-in;
+  transition: transform .5s ease-in;
+  transition: transform .5s ease-in, -webkit-transform .5s ease-in; }
+  .carousel li {
     display: block;
-    height: 200px;
     width: 100%;
     background-color: #f0f0f0; }
-    @media screen and (min-width: 800px) {
-      .carousel
-li {
+    .carousel li > img {
+      display: block;
+      width: 100%; }
+    @media screen and (min-width: 600px) {
+      .carousel li {
+        width: 50%; } }
+    @media screen and (min-width: 1200px) {
+      .carousel li {
         width: 33.33%; } }
-    @media screen and (min-width: 1280px) {
-      .carousel
-li {
-        width: 25%; } }
 
 .carousel-prev-button,
 .carousel-next-button {
@@ -91,10 +90,9 @@ li {
   width: 30px;
   height: 30px;
   background-color: red; }
-  .carousel-prev-button.hide
-,
+  .carousel-prev-button.hide,
   .carousel-next-button.hide {
-    opacity: 0; }
+    display: none; }
 
 .carousel-prev-button {
   left: 0; }
