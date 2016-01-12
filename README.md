@@ -1,6 +1,8 @@
 # tnt-carousel
 ## Super simple responsive carousel with touch support
 
+[![Join the chat at https://gitter.im/reinvanoyen/tnt-carousel](https://badges.gitter.im/reinvanoyen/tnt-carousel.svg)](https://gitter.im/reinvanoyen/tnt-carousel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Designed to be used with [browserify](http://www.browserify.org).
 
 There's a huge amount of carousel scripts out there, I'm fully aware of that. But not many carousels work well with percentages, fluid layouts and media queries.
