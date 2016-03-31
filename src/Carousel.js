@@ -75,6 +75,7 @@ var Carousel = function( element, options ) {
 		mouseSwipe: true,
 		keyEvents: false,
 		arrowButtons: true,
+		arrowButtonsContainer: null,
 		previousArrowClass: 'carousel-prev-button',
 		nextArrowClass: 'carousel-next-button',
 		inactiveArrowClass: 'hide',
@@ -125,8 +126,15 @@ Carousel.prototype.build = function() {
 			this._nextButton = document.createElement( 'button' );
 			this._nextButton.classList.add( this.options.nextArrowClass );
 
-			this._wrap.appendChild( this._prevButton );
-			this._wrap.appendChild( this._nextButton );
+			if( ! this.options.arrowButtonsContainer ) {
+
+				this._wrap.appendChild( this._prevButton );
+				this._wrap.appendChild( this._nextButton );
+			} else {
+
+				this.options.arrowButtonsContainer.appendChild( this._prevButton );
+				this.options.arrowButtonsContainer.appendChild( this._nextButton );
+			}
 		}
 
 		this.refresh();

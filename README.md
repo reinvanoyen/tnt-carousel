@@ -74,6 +74,7 @@ Option | Type | Default | Description
 ------ | ---- | ------- | -----------
 activeSlideClass | string | active | The currently active slide will have this class assigned
 arrowButtons | boolean | true | Whether or not to automatically add a previous and next button
+arrowButtonsContainer | Element | null | The HTML Element to append the arrow buttons to
 autoplay | boolean | false | Whether or not to automatically start playing once the carousel is built
 autoplayInterval | int | 4000 | The time interval (in milliseconds) between each slide
 edgeFriction | number | 0.1 | Determines the distance (width of slide * edgeFriction) to swipe before it is registered as a request to a new slide. A value between 0.1 and 0.3 feels natural.
