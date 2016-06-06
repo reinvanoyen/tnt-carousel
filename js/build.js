@@ -1,1 +1,396 @@
-!function t(e,i,s){function n(r,a){if(!i[r]){if(!e[r]){var l="function"==typeof require&&require;if(!a&&l)return l(r,!0);if(o)return o(r,!0);var h=new Error("Cannot find module '"+r+"'");throw h.code="MODULE_NOT_FOUND",h}var d=i[r]={exports:{}};e[r][0].call(d.exports,function(t){var i=e[r][1][t];return n(i?i:t)},d,d.exports,t,e,i,s)}return i[r].exports}for(var o="function"==typeof require&&require,r=0;r<s.length;r++)n(s[r]);return n}({1:[function(t,e,i){"use strict";var s=t("../src/Carousel.js");new s(document.querySelector(".carousel"),{autoplay:!1,mouseSwipe:!1,arrowButtonsContainer:document.querySelector("body")})},{"../src/Carousel.js":2}],2:[function(t,e,i){"use strict";var s=function(t,e){var i,s={};for(i in t)Object.prototype.hasOwnProperty.call(t,i)&&(s[i]=t[i]);for(i in e)Object.prototype.hasOwnProperty.call(e,i)&&(s[i]=e[i]);return s},n=function(t){t&&t.parentNode&&t.parentNode.removeChild(t)},o=function(t,e){var i=0,s=t.length;0===s&&e();for(var n=0;n<t.length;n++){var o=new Image;o.onload=function(){i++,i===s&&e()},o.src=t[n].getAttribute("src")}},r=function(t,e){e=e||{};var i={autoplay:!1,playInterval:4e3,touchSwipe:!0,mouseSwipe:!0,keyEvents:!1,arrowButtons:!0,arrowButtonsContainer:null,previousArrowClass:"carousel-prev-button",nextArrowClass:"carousel-next-button",inactiveArrowClass:"hide",loadedClass:"loaded",activeSlideClass:"active",edgeFriction:.1};this.options=s(i,e),this._element=t,this._slides=this._element.children,this.amountOfSlides=this._slides.length,this.activeSlideIndex=0,this.translateX=0,this.dragDistance=0,this.dragDuration=0,this.isBuilt=!1;var n=this;this.amountOfSlides>0&&o(this._element.getElementsByTagName("img"),function(){n.build()})};r.prototype.build=function(){this.isBuilt||(this._wrap=document.createElement("div"),this._element.parentElement.insertBefore(this._wrap,this._element),this._wrap.appendChild(this._element),this._element.classList.add(this.options.loadedClass),this._firstSlide=this._slides[0],this.options.arrowButtons&&(this._prevButton=document.createElement("button"),this._prevButton.classList.add(this.options.previousArrowClass),this._nextButton=document.createElement("button"),this._nextButton.classList.add(this.options.nextArrowClass),this.options.arrowButtonsContainer?(this.options.arrowButtonsContainer.appendChild(this._prevButton),this.options.arrowButtonsContainer.appendChild(this._nextButton)):(this._wrap.appendChild(this._prevButton),this._wrap.appendChild(this._nextButton))),this.refresh(),this.bindEvents(),this.options.autoplay&&this.play(),this.isBuilt=!0)},r.prototype.destroy=function(){if(this.isBuilt){this._element.removeAttribute("style"),this._element.classList.remove(this.options.loadedClass),this.options.arrowButtons&&(n(this._prevButton),n(this._nextButton));for(var t=0;t<this._slides.length;t++)this._slides[t].removeAttribute("style"),this._slides[t].classList.remove(this.options.activeSlideClass);this.pause(),this.unbindEvents(),this.isBuilt=!1}},r.prototype.bindEvents=function(){var t,e,i,s,n=this,o=function(t){n.refresh()},r=function(t){n.pause(),n.goToNext()},a=function(t){n.pause(),n.goToPrevious()},l=function(t){37===t.keyCode?(n.pause(),n.goToPrevious()):39===t.keyCode&&(n.pause(),n.goToNext())},h=function(o){s=!0;var r=o;o.changedTouches&&(r=o.changedTouches[0]),t=n.translateX,e=r.clientX,i=Date.now(),n.setTransition("none")},d=function(i){if(s){var o=i;i.changedTouches&&(o=i.changedTouches[0]),n.dragDistance=o.clientX-e,n.setTranslateX(t+n.dragDistance),i.preventDefault()}},u=function(t){s=!1,n.setTransition(""),n.setTransitionTimingFunction(""),n.dragDuration=Date.now()-i,n.adjustScrollPosition(),n.dragDistance=0,n.dragDuration=0};window.addEventListener("resize",o),this.options.touchSwipe&&(this._wrap.addEventListener("touchstart",h),this._wrap.addEventListener("touchmove",d),this._wrap.addEventListener("touchend",u)),this.options.mouseSwipe&&(this._wrap.addEventListener("mousedown",h),this._wrap.addEventListener("mousemove",d),this._wrap.addEventListener("mouseup",u)),this.options.keyEvents&&document.addEventListener("keydown",l),this.options.arrowButtons&&(this._prevButton.addEventListener("click",a),this._nextButton.addEventListener("click",r))},r.prototype.unbindEvents=function(){window.removeEventListener("resize"),document.removeEventListener("keydown")},r.prototype.setTransition=function(t){this._element.style.transition=t,this._element.style.MozTransition=t,this._element.style.webkitTransition=t,this._element.style.msTransition=t,this._element.style.OTransition=t},r.prototype.setTransitionTimingFunction=function(t){this._element.style.transitionTimingFunction=t,this._element.style.MozTransitionTimingFunction=t,this._element.style.webkitTransitionTimingFunction=t,this._element.style.msTransitionTimingFunction=t,this._element.style.OTransitionTimingFunction=t},r.prototype.setTransitionDuration=function(t){this._element.style.transitionDuration=t+"ms",this._element.style.MozTransitionDuration=t+"ms",this._element.style.webkitTransitionDuration=t+"ms",this._element.style.msTransitionDuration=t+"ms",this._element.style.OTransitionDuration=t+"ms"},r.prototype.setTranslateX=function(t){this.translateX=t,this._element.style.transform="translate3d("+this.translateX+"px, 0, 0)",this._element.style.MozTransform="translateX("+this.translateX+"px)",this._element.style.webkitTransform="translate3d("+this.translateX+"px, 0, 0)",this._element.style.msTransform="translateX("+this.translateX+"px)",this._element.style.OTransform="translateX("+this.translateX+"px)"},r.prototype.adjustScrollPosition=function(){var t=Math.abs(this.dragDistance);if(t>this.slideWidth*this.options.edgeFriction){var e=this.dragDuration/t;this.setTransitionDuration(200*e);var i=Math.ceil(t/this.slideWidth);this.dragDistance<0&&(this.isOnRightEdge?this.goTo(this.amountOfSlides-1):this.goTo(this.activeSlideIndex+i)),this.dragDistance>0&&(this.isOnLeftEdge?this.goTo(0):this.goTo(this.activeSlideIndex-i))}else this.goTo(this.activeSlideIndex)},r.prototype.refresh=function(){var t=this;t.activeSlideIndex=0;for(var e=0;e<t._slides.length;e++)t._slides[e].removeAttribute("style");t._wrap.removeAttribute("style"),t._element.removeAttribute("style"),t.elementWidth=t._element.offsetWidth,t.slideWidth=t._firstSlide.offsetWidth,t.slideHeight=t._firstSlide.offsetHeight,t.amountVisible=Math.round(t.elementWidth/t.slideWidth),t.totalWidth=t.amountOfSlides*t.slideWidth,t._wrap.style.width=t.elementWidth+"px",t._wrap.style.position="relative",t._wrap.style.overflow="hidden",t._wrap.style.height=t.slideHeight+"px",t._element.style.width=t.totalWidth+"px";for(var e=0;e<t._slides.length;e++)t._slides[e].style["float"]="left",t._slides[e].style.width=t.slideWidth+"px";t.refreshState()},r.prototype.refreshState=function(){for(var t=0;t<this._slides.length;t++)this._slides[t].classList.remove(this.options.activeSlideClass);this._slides[this.activeSlideIndex].classList.add(this.options.activeSlideClass),this.isOnLeftEdge=0===this.activeSlideIndex,this.isOnRightEdge=this.amountOfSlides-this.activeSlideIndex<=this.amountVisible,this.refreshButtons()},r.prototype.refreshButtons=function(){this.options.arrowButtons&&(this._prevButton.classList.remove("hide"),this._nextButton.classList.remove("hide"),this.isOnLeftEdge&&this._prevButton.classList.add("hide"),this.isOnRightEdge&&this._nextButton.classList.add("hide"))},r.prototype.goToNext=function(){this.goTo(this.activeSlideIndex+1)},r.prototype.goToPrevious=function(){this.goTo(this.activeSlideIndex-1)},r.prototype.goTo=function(t){if(t>=0&&t<this.amountOfSlides){this.activeSlideIndex=t;var e=Math.max(-(this.activeSlideIndex*this.slideWidth),-(this.totalWidth-this.elementWidth));e=Math.min(0,e),this.setTranslateX(e),this.refreshState()}0>t&&this.goTo(0),t>=this.amountOfSlides&&this.goTo(this.amountOfSlides-1)},r.prototype.play=function(){var t=this;this.playInterval=setInterval(function(){t.goToNext()},this.options.playInterval)},r.prototype.pause=function(){clearInterval(this.playInterval)},e.exports=r},{}]},{},[1]);
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+"use strict";
+
+var Carousel = require('../src/carousel.js');
+
+var carousel = new Carousel(document.querySelector('.carousel'), {
+	autoplay: false,
+	mouseSwipe: false,
+	arrowButtonsContainer: document.querySelector('body')
+});
+
+},{"../src/carousel.js":4}],2:[function(require,module,exports){
+"use strict";
+
+var util = require( './util' );
+
+class TntDomElement {
+
+	constructor( arg ) {
+
+		if( arg instanceof TntDomElement )
+		{
+			return arg;
+		}
+
+		if( typeof arg === 'string' ) {
+
+			if( util.isHtmlString( arg ) ) {
+
+				let wrap = document.createElement( 'div' );
+				wrap.innerHTML = arg;
+				return new TntDomElement( wrap.childNodes );
+
+			} else {
+
+				return new TntDomElement( document.querySelectorAll( arg ) );
+			}
+		}
+
+		this.elements = [];
+
+		if( arg instanceof HTMLElement ) {
+
+			this.elements.push( arg );
+
+		} else if( arg instanceof HTMLCollection || arg instanceof NodeList ) {
+
+			for( var i = 0; i < arg.length; i++ )
+			{
+				this.elements.push( arg[ i ] );
+			}
+
+		} else {
+
+			throw "Invalid argument for constructor";
+		}
+
+		return this;
+	}
+
+	forEach( cb ) {
+
+		this.elements.forEach( e => {
+
+			cb( e );
+		} );
+	}
+
+	length() {
+
+		return this.elements.length;
+	}
+
+	html( htmlString ) {
+
+		this.forEach( e => {
+
+			e.innerHTML = htmlString;
+		} );
+
+		return this;
+	}
+
+	addClass( classname ) {
+
+		this.forEach( e => {
+
+			e.classList.add( classname );
+		} );
+
+		return this;
+	}
+
+	removeClass( classname ) {
+
+		this.forEach( e => {
+
+			e.classList.remove( classname );
+		} );
+
+		return this;
+	}
+
+	css( property, value ) {
+
+
+		this.forEach( e => {
+
+			e.style[ property ]= value;
+		} );
+
+		return this;
+	}
+
+	remove() {
+
+		this.forEach( e => {
+
+			e && e.parentNode && e.parentNode.removeChild( e );
+		} );
+
+		return this;
+	}
+
+	get( i ) {
+
+		if( typeof this.elements[ i ] !== 'undefined' ) {
+
+			return this.elements[ i ];
+		}
+
+		throw "Could not get element with index " + i;
+	}
+
+	append( element ) {
+
+		element = new TntDomElement( element );
+
+		let first = this.get( 0 );
+
+		element.forEach( e => {
+
+			first.appendChild( e );
+		} );
+	}
+
+	appendTo( element ) {
+
+		let first = element.get( 0 );
+
+		this.forEach( e => {
+
+			first.appendChild( e );
+		} );
+	}
+
+	copy() {
+
+		let html = '';
+
+		this.forEach( e => {
+
+			html += e.outerHTML;
+		} );
+
+		return new TntDomElement( html );
+	}
+
+	insertBefore( element ) {
+
+		let first = element.get( 0 );
+
+		this.forEach( e => {
+
+			first.parentNode.insertBefore( e, first );
+		} );
+	}
+
+	wrap( element ) {
+
+		element = new TntDomElement( element );
+		element.insertBefore( this );
+		this.appendTo( element );
+	}
+
+	click( cb ) {
+
+		return this.bind( 'click', cb );
+	}
+
+	bind( eventName, cb ) {
+
+		this.forEach( e => {
+
+			e.addEventListener( eventName, cb );
+		} );
+
+		return this;
+	}
+}
+
+module.exports = TntDomElement;
+},{"./util":3}],3:[function(require,module,exports){
+var util = {};
+
+util.isHtmlString = function( string ) {
+
+	return /<[a-z][\s\S]*>/i.test( string );
+};
+
+module.exports = util;
+},{}],4:[function(require,module,exports){
+/*
+
+tnt-carousel
+------------
+
+Author: Rein Van Oyen <rein@tnt.be>
+Website: http://www.tnt.be
+Repo: http://github.com/reinvanoyen/tnt-carousel
+Issues: http://github.com/reinvanoyen/tnt-carousel/issues
+
+*/
+
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var tnt = require('tnt-dom');
+var util = require('./util');
+var defaultOptions = require('./defaults');
+
+var Carousel = function () {
+	function Carousel(element, options) {
+		_classCallCheck(this, Carousel);
+
+		this.el = element;
+		this.options = util.extend(defaultOptions, options);
+
+		this.setup();
+	}
+
+	_createClass(Carousel, [{
+		key: 'setup',
+		value: function setup() {
+
+			this.children = new tnt(this.el.children);
+			this.slideCount = this.children.length();
+
+			this.refresh();
+			this.build();
+			this.refreshBuild();
+
+			this.slideTo(0);
+		}
+	}, {
+		key: 'refresh',
+		value: function refresh() {
+
+			var firstSlide = this.children.get(0);
+
+			this.slideHeight = firstSlide.offsetHeight;
+			this.slideWidth = firstSlide.offsetWidth;
+
+			//
+			this.visibleSlideCount = Math.floor(this.el.offsetWidth / this.slideWidth);
+
+			// Wrap width
+			this.wrapWidth = this.slideWidth * this.slideCount;
+
+			// Resize each child
+			this.children.css('height', this.slideHeight + 'px');
+			this.children.css('width', this.slideWidth + 'px');
+		}
+	}, {
+		key: 'build',
+		value: function build() {
+
+			this.wrap = new tnt('<div class="tnt-carousel-wrap">');
+			this.children.wrap(this.wrap);
+		}
+	}, {
+		key: 'refreshBuild',
+		value: function refreshBuild() {
+
+			this.wrap.css('width', this.wrapWidth + 'px');
+			this.wrap.css('height', this.slideHeight + 'px');
+			this.wrap.css('overflow', 'hidden');
+		}
+	}, {
+		key: 'slideTo',
+		value: function slideTo(index) {
+
+			var offset = this.slideWidth * index;
+			this.wrap.css('transform', 'translateX(-' + offset + 'px)');
+		}
+	}]);
+
+	return Carousel;
+}();
+
+module.exports = Carousel;
+
+},{"./defaults":5,"./util":6,"tnt-dom":2}],5:[function(require,module,exports){
+"use strict";
+
+module.exports = {
+	autoplay: false,
+	playInterval: 4000,
+	touchSwipe: true,
+	mouseSwipe: true,
+	keyEvents: false,
+	arrowButtons: true,
+	arrowButtonsContainer: null,
+	previousArrowClass: 'carousel-prev-button',
+	nextArrowClass: 'carousel-next-button',
+	inactiveArrowClass: 'hide',
+	loadedClass: 'loaded',
+	activeSlideClass: 'active',
+	edgeFriction: .1
+};
+
+},{}],6:[function(require,module,exports){
+'use strict';
+
+var util = {};
+
+util.proxy = function (c, f) {
+
+	var args = Array.prototype.slice.call(arguments, 2);
+
+	return function () {
+
+		return f.apply(c, args.concat(Array.prototype.slice.call(arguments)));
+	};
+};
+
+util.extend = function (defaults, options) {
+
+	var extended = {};
+	var prop;
+
+	for (prop in defaults) {
+
+		if (Object.prototype.hasOwnProperty.call(defaults, prop)) {
+			extended[prop] = defaults[prop];
+		}
+	}
+
+	for (prop in options) {
+
+		if (Object.prototype.hasOwnProperty.call(options, prop)) {
+			extended[prop] = options[prop];
+		}
+	}
+
+	return extended;
+};
+
+util.removeElement = function (element) {
+
+	element && element.parentNode && element.parentNode.removeChild(element);
+};
+
+util.loadImages = function (_images, callback) {
+
+	var amountLoaded = 0,
+	    amountToLoad = _images.length;
+
+	if (amountToLoad === 0) {
+		callback();
+	}
+
+	for (var i = 0; i < _images.length; i++) {
+
+		var image = new Image();
+
+		image.onload = function () {
+
+			amountLoaded++;
+
+			if (amountLoaded === amountToLoad) {
+
+				callback();
+			}
+		};
+
+		image.src = _images[i].getAttribute('src');
+	}
+};
+
+module.exports = util;
+
+},{}]},{},[1]);

@@ -6,8 +6,7 @@ var
 	autoprefixer = require('gulp-autoprefixer'),
 	source = require('vinyl-source-stream'),
 	buffer = require('vinyl-buffer'),
-	del = require( 'del'),
-	uglify = require('gulp-uglify')
+	del = require( 'del')
 ;
 
 gulp.task( 'watch', function()
@@ -37,12 +36,13 @@ gulp.task( 'sass', function() {
 } );
 
 gulp.task( 'build-site', function() {
+
 	return browserify( 'js/app.js')
+		.transform( 'babelify', { presets: ['es2015'] } )
 		.bundle()
 		.pipe( source( 'build.js' ) )
 		.pipe( gulp.dest( 'js' ) )
 		.pipe( buffer() )
-		.pipe( uglify() )
 		.pipe( gulp.dest( 'js' ) )
 	;
 } );

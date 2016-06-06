@@ -12,7 +12,7 @@
     "gallery",
     "photo",
     "responsive",
-	"lightweight"
+    "lightweight"
   ],
   "author": {
     "name": "Rein Van Oyen",
@@ -37,5 +37,10 @@
     "gulp-watch": "^4.3.5",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "babel-preset-es2015": "^6.9.0",
+    "babelify": "^7.3.0",
+    "tnt-dom": "0.0.9"
   }
 }

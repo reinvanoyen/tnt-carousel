@@ -1,6 +1,6 @@
 "use strict";
 
-var Carousel = require( '../src/Carousel.js' );
+var Carousel = require( '../src/carousel.js' );
 
 var carousel = new Carousel( document.querySelector( '.carousel' ), {
 	autoplay: false,

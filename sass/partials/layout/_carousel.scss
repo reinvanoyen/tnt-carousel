@@ -7,13 +7,9 @@
 	{
 		display: block;
 		width: 100%;
+		height: 350px;
+		float: left;
 		background-color: #f0f0f0;
-
-		>img
-		{
-			display: block;
-			width: 100%;
-		}
 
 		@media screen and ( min-width: 600px )
 		{
@@ -23,6 +19,11 @@
 		@media screen and ( min-width: 1200px )
 		{
 			width: 33.33%;
+		}
+
+		&:nth-child( odd )
+		{
+			background-color: #ccc;
 		}
 	}
 }
