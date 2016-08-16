@@ -55,7 +55,6 @@ var loadImages = function( _images, callback ) {
 			amountLoaded++;
 
 			if( amountLoaded === amountToLoad ) {
-
 				callback();
 			}
 		}
@@ -70,7 +69,7 @@ var Carousel = function( element, options ) {
 
 	var DEFAULT_OPTIONS = {
 		autoplay: false,
-		playInterval: 4000,
+		autoplayInterval: 4000,
 		touchSwipe: true,
 		mouseSwipe: true,
 		keyEvents: false,
@@ -325,7 +324,7 @@ Carousel.prototype.adjustScrollPosition = function() {
 
 	var absoluteDistance = Math.abs( this.dragDistance );
 
-	if( absoluteDistance >  ( this.slideWidth * this.options.edgeFriction ) ) {
+	if( absoluteDistance > ( this.slideWidth * this.options.edgeFriction ) ) {
 
 		var speed = ( this.dragDuration / absoluteDistance );
 	
@@ -345,13 +344,11 @@ Carousel.prototype.adjustScrollPosition = function() {
 		if( this.dragDistance > 0 ) {
 			if( this.isOnLeftEdge ) {
 				this.goTo( 0 );
-			}
-			else {
+			} else {
 				this.goTo( this.activeSlideIndex - amountOfSlidesDragged );
 			}
 		}
-	}
-	else {
+	} else {
 		this.goTo( this.activeSlideIndex );
 	}
 };
@@ -452,7 +449,7 @@ Carousel.prototype.goTo = function( n ) {
 	}
 
 	if( n >= this.amountOfSlides ) {
-		this.goTo( this.amountOfSlides - 1 );
+		this.goTo( 0 );
 	}
 };
 
@@ -463,8 +460,7 @@ Carousel.prototype.play = function() {
 	this.playInterval = setInterval( function() {
 
 		that.goToNext();
-
-	}, this.options.playInterval );
+	}, this.options.autoplayInterval );
 };
 
 Carousel.prototype.pause = function() {
