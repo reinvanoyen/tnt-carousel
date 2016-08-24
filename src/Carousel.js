@@ -92,7 +92,8 @@ var Carousel = function( element, options ) {
 
 	this.activeSlideIndex = 0;
 	this.translateX = 0;
-	this.dragDistance = 0;
+	this.dragDistanceX = 0;
+	this.dragDistanceY = 0;
 	this.dragDuration = 0;
 	this.isBuilt = false;
 
@@ -204,43 +205,67 @@ Carousel.prototype.bindEvents = function() {
 	};
 
 	var originalTranslateX,
-		startPosX,
+		startPosX, startPosY,
 		startTime,
+		dragRatio,
 		isDragging
 	;
 
 	var dragStart = function( e ) {
+
 		isDragging = true;
-		
+
 		var event = e;
+
 		if( e.changedTouches ) {
+
 			event = e.changedTouches[ 0 ];
 		}
+
 		originalTranslateX = that.translateX;
 		startPosX = event.clientX;
+		startPosY = event.clientY;
 		startTime = Date.now();
 		that.setTransition( 'none' );
 	};
 
 	var dragMove = function( e ) {
+
 		if( isDragging ) {
+
 			var event = e;
+
 			if( e.changedTouches ) {
+
 				event = e.changedTouches[ 0 ];
 			}
-			that.dragDistance = event.clientX - startPosX;
-			that.setTranslateX( originalTranslateX + ( that.dragDistance ) );
-			e.preventDefault();
+
+			that.dragDistanceX = event.clientX - startPosX;
+			that.dragDistanceY = event.clientY - startPosY;
+			that.setTranslateX( originalTranslateX + ( that.dragDistanceX ) );
+
+			if( Math.abs( that.dragDistanceX ) > 0 ) {
+
+				dragRatio = Math.abs( that.dragDistanceY ) / Math.abs( that.dragDistanceX ) || 0;
+			}
+
+			if( dragRatio > 0 && dragRatio < 1 || e.type === 'mousemove' ) {
+
+				e.preventDefault();
+			}
 		}
 	};
 
 	var dragEnd = function( e ) {
+
 		isDragging = false;
+		dragRatio = 0;
 		that.setTransition( '' );
 		that.setTransitionTimingFunction( '' );
 		that.dragDuration = ( Date.now() - startTime );
 		that.adjustScrollPosition();
-		that.dragDistance = 0;
+		that.dragDistanceX = 0;
+		that.dragDistanceY = 0;
 		that.dragDuration = 0;
 	};
 
@@ -322,7 +347,7 @@ Carousel.prototype.setTranslateX = function( n ) {
 
 Carousel.prototype.adjustScrollPosition = function() {
 
-	var absoluteDistance = Math.abs( this.dragDistance );
+	var absoluteDistance = Math.abs( this.dragDistanceX );
 
 	if( absoluteDistance > ( this.slideWidth * this.options.edgeFriction ) ) {
 
@@ -332,7 +357,7 @@ Carousel.prototype.adjustScrollPosition = function() {
 
 		var amountOfSlidesDragged = Math.ceil( absoluteDistance / this.slideWidth );
 
-		if( this.dragDistance < 0 ) {
+		if( this.dragDistanceX < 0 ) {
 			if( this.isOnRightEdge ) {
 				this.goTo( this.amountOfSlides - 1 );
 			}
@@ -341,7 +366,7 @@ Carousel.prototype.adjustScrollPosition = function() {
 			}
 		}
 
-		if( this.dragDistance > 0 ) {
+		if( this.dragDistanceX > 0 ) {
 			if( this.isOnLeftEdge ) {
 				this.goTo( 0 );
 			} else {

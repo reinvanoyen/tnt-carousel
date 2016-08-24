@@ -75,7 +75,7 @@ button, input, textarea {
     .carousel li > img {
       display: block;
       width: 100%; }
-    @media screen and (min-width: 600px) {
+    @media screen and (min-width: 1000px) {
       .carousel li {
         width: 50%; } }
     @media screen and (min-width: 1200px) {
