@@ -84,6 +84,7 @@ var Carousel = function( element, options ) {
 	};
 
 	this.options = extend( DEFAULT_OPTIONS, options );
+	this.eventqueue = {};
 
 	this._element = element;
 	this._slides = this._element.children;
@@ -103,6 +104,27 @@ var Carousel = function( element, options ) {
 
 		loadImages( this._element.getElementsByTagName( 'img' ), function() {
 			that.build();
+		} );
+	}
+};
+
+Carousel.prototype.on = function( event_name, callback ) {
+
+	if( typeof this.eventqueue[ event_name ] == 'undefined' ) {
+
+		this.eventqueue[ event_name ] = [];
+	}
+
+	this.eventqueue[ event_name ].push( callback );
+};
+
+Carousel.prototype.trigger = function( event_name, event ) {
+
+	if( typeof this.eventqueue[ event_name ] != 'undefined' ) {
+
+		this.eventqueue[ event_name ].forEach( function( e ) {
+
+			e( event );
 		} );
 	}
 };
@@ -471,11 +493,17 @@ Carousel.prototype.goTo = function( n ) {
 
 	if( n < 0 ) {
 		this.goTo( 0 );
+		return;
 	}
 
 	if( n >= this.amountOfSlides ) {
 		this.goTo( 0 );
+		return;
 	}
+
+	this.trigger( 'goTo', {
+		index: n
+	} );
 };
 
 Carousel.prototype.play = function() {
