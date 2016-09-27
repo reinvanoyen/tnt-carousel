@@ -492,7 +492,7 @@ Carousel.prototype.goTo = function( n ) {
 	}
 
 	if( n < 0 ) {
-		this.goTo( 0 );
+		this.goTo( this.amountOfSlides - 1 );
 		return;
 	}
 

@@ -90,9 +90,6 @@ button, input, textarea {
   width: 30px;
   height: 30px;
   background-color: red; }
-  .carousel-prev-button.hide,
-  .carousel-next-button.hide {
-    display: none; }
 
 .carousel-prev-button {
   left: 0; }
