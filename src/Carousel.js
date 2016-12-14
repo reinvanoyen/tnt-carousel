@@ -163,18 +163,22 @@ Carousel.prototype.build = function() {
 		this.bindEvents();
 
 		if( this.options.autoplay ) {
-
 			this.play();
 		}
 
 		this.isBuilt = true;
 	}
-
 };
 
 Carousel.prototype.destroy = function() {
 
 	if( this.isBuilt ) {
+
+		this.unbindEvents();
+		this.pause();
+
+		this._wrap.parentElement.appendChild( this._element );
+		removeElement( this._wrap );
 
 		this._element.removeAttribute( 'style' );
 		this._element.classList.remove( this.options.loadedClass );
@@ -190,9 +194,6 @@ Carousel.prototype.destroy = function() {
 			this._slides[ i ].classList.remove( this.options.activeSlideClass );
 		}
 
-		this.pause();
-		this.unbindEvents();
-
 		this.isBuilt = false;
 	}
 };
@@ -201,21 +202,28 @@ Carousel.prototype.bindEvents = function() {
 
 	var that = this;
 
-	var refresh = function( e ) {
-		that.refresh();
-	};
+	var originalTranslateX,
+		startPosX, startPosY,
+		startTime,
+		dragRatio,
+		isDragging
+	;
 
-	var nextArrowClick = function( e ) {
+	function refresh( e ) {
+		that.refresh();
+	}
+
+	function nextArrowClick( e ) {
 		that.pause();
 		that.goToNext();
-	};
+	}
 
-	var prevArrowClick = function( e ) {
+	function prevArrowClick( e ) {
 		that.pause();
 		that.goToPrevious();
-	};
+	}
 
-	var keyDown = function( e ) {
+	function keyDown( e ) {
 		if( e.keyCode === 37 ) {
 			that.pause();
 			that.goToPrevious();
@@ -224,23 +232,15 @@ Carousel.prototype.bindEvents = function() {
 			that.pause();
 			that.goToNext();
 		}
-	};
+	}
 
-	var originalTranslateX,
-		startPosX, startPosY,
-		startTime,
-		dragRatio,
-		isDragging
-	;
-
-	var dragStart = function( e ) {
+	function dragStart( e ) {
 
 		isDragging = true;
 
 		var event = e;
 
 		if( e.changedTouches ) {
-
 			event = e.changedTouches[ 0 ];
 		}
 
@@ -249,9 +249,9 @@ Carousel.prototype.bindEvents = function() {
 		startPosY = event.clientY;
 		startTime = Date.now();
 		that.setTransition( 'none' );
-	};
+	}
 
-	var dragMove = function( e ) {
+	function dragMove( e ) {
 
 		if( isDragging ) {
 
@@ -276,9 +276,9 @@ Carousel.prototype.bindEvents = function() {
 				e.preventDefault();
 			}
 		}
-	};
+	}
 
-	var dragEnd = function( e ) {
+	function dragEnd( e ) {
 
 		isDragging = false;
 		dragRatio = 0;
@@ -289,7 +289,7 @@ Carousel.prototype.bindEvents = function() {
 		that.dragDistanceX = 0;
 		that.dragDistanceY = 0;
 		that.dragDuration = 0;
-	};
+	}
 
 	window.addEventListener( 'resize', refresh );
 
@@ -301,15 +301,14 @@ Carousel.prototype.bindEvents = function() {
 	}
 
 	if( this.options.mouseSwipe ) {
-		
+
 		this._wrap.addEventListener( 'mousedown', dragStart );
 		this._wrap.addEventListener( 'mousemove', dragMove );
 		this._wrap.addEventListener( 'mouseup', dragEnd );
 	}
 
 	if( this.options.keyEvents ) {
-
-		document.addEventListener( 'keydown',  keyDown );
+		document.addEventListener( 'keydown', keyDown );
 	}
 
 	if( this.options.arrowButtons ) {
@@ -317,12 +316,25 @@ Carousel.prototype.bindEvents = function() {
 		this._prevButton.addEventListener( 'click', prevArrowClick );
 		this._nextButton.addEventListener( 'click', nextArrowClick );
 	}
-};
 
-Carousel.prototype.unbindEvents = function() {
+	Carousel.prototype.unbindEvents = function() {
 
-	window.removeEventListener( 'resize' );
-	document.removeEventListener( 'keydown' );
+		window.removeEventListener( 'resize', refresh );
+		document.removeEventListener( 'keydown', keyDown );
+
+		that._wrap.removeEventListener( 'touchstart', dragStart );
+		that._wrap.removeEventListener( 'touchmove', dragMove );
+		that._wrap.removeEventListener( 'touchend', dragEnd );
+
+		that._wrap.removeEventListener( 'mousedown', dragStart );
+		that._wrap.removeEventListener( 'mousemove', dragMove );
+		that._wrap.removeEventListener( 'mouseup', dragEnd );
+
+		if( that.options.arrowButtons ) {
+			that._prevButton.removeEventListener( 'click', prevArrowClick );
+			that._nextButton.addEventListener( 'click', nextArrowClick );
+		}
+	};
 };
 
 Carousel.prototype.setTransition = function( transition ) {

@@ -2,6 +2,20 @@
 
 var Carousel = require( '../src/Carousel.js' );
 
-var carousel = new Carousel( document.querySelector( '.carousel' ), {
-	mouseSwipe: false
+var carousel;
+
+setTimeout( function() {
+
+	carousel = new Carousel( document.querySelector( '.carousel' ), {
+		mouseSwipe: true
+	} );
+
+}, 5000 );
+
+window.addEventListener( 'resize', function() {
+	console.log('resizing');
 } );
+
+setTimeout( function() {
+	carousel.destroy();
+}, 10000 );
