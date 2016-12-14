@@ -209,8 +209,8 @@ Carousel.prototype.bindEvents = function() {
 		isDragging
 	;
 
-	function reset( e ) {
-		that.reset();
+	function refresh( e ) {
+		that.refresh();
 	}
 
 	function nextArrowClick( e ) {
@@ -291,7 +291,7 @@ Carousel.prototype.bindEvents = function() {
 		that.dragDuration = 0;
 	}
 
-	window.addEventListener( 'resize', reset );
+	window.addEventListener( 'resize', refresh );
 
 	if( this.options.touchSwipe ) {
 
@@ -410,12 +410,6 @@ Carousel.prototype.adjustScrollPosition = function() {
 	} else {
 		this.goTo( this.activeSlideIndex );
 	}
-};
-
-Carousel.prototype.reset = function() {
-
-	this.activeSlideIndex = 0;
-	this.refresh();
 };
 
 Carousel.prototype.refresh = function() {

@@ -6,6 +6,11 @@ var carousel = new Carousel( document.querySelector( '.carousel' ), {
 	mouseSwipe: true
 } );
 
+carousel.on( 'goTo', function( e ) {
+
+	console.log( e.index );
+} );
+
 setTimeout( function() {
 
 	var li = document.getElementById('recalc');
