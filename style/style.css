@@ -43,15 +43,12 @@ button, input, textarea {
   background-image: url("img/header.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-align: center;
+      align-items: center;
+  -ms-flex-pack: center;
+      justify-content: center;
   display: none; }
   #wrapper > header h1, #wrapper > header h2 {
     font-family: "Playfair Display", serif;
@@ -65,13 +62,11 @@ button, input, textarea {
 
 .carousel {
   overflow: hidden;
-  transition: -webkit-transform .5s ease-in;
-  transition: transform .5s ease-in;
-  transition: transform .5s ease-in, -webkit-transform .5s ease-in; }
+  transition: transform .5s ease-in; }
   .carousel li {
     display: block;
     width: 100%;
-    background-color: #f0f0f0; }
+    background-color: blue; }
     .carousel li > img {
       display: block;
       width: 100%; }
@@ -96,3 +91,6 @@ button, input, textarea {
 
 .carousel-next-button {
   right: 0; }
+
+#recalc.changed {
+  height: 500px; }

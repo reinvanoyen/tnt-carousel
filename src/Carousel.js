@@ -209,8 +209,8 @@ Carousel.prototype.bindEvents = function() {
 		isDragging
 	;
 
-	function refresh( e ) {
-		that.refresh();
+	function reset( e ) {
+		that.reset();
 	}
 
 	function nextArrowClick( e ) {
@@ -291,7 +291,7 @@ Carousel.prototype.bindEvents = function() {
 		that.dragDuration = 0;
 	}
 
-	window.addEventListener( 'resize', refresh );
+	window.addEventListener( 'resize', reset );
 
 	if( this.options.touchSwipe ) {
 
@@ -319,7 +319,7 @@ Carousel.prototype.bindEvents = function() {
 
 	Carousel.prototype.unbindEvents = function() {
 
-		window.removeEventListener( 'resize', refresh );
+		window.removeEventListener( 'resize', reset );
 		document.removeEventListener( 'keydown', keyDown );
 
 		that._wrap.removeEventListener( 'touchstart', dragStart );
@@ -412,47 +412,53 @@ Carousel.prototype.adjustScrollPosition = function() {
 	}
 };
 
+Carousel.prototype.reset = function() {
+
+	this.activeSlideIndex = 0;
+	this.refresh();
+};
+
 Carousel.prototype.refresh = function() {
 
-	var that = this;
-
-	that.activeSlideIndex = 0;
-
-	for( var i = 0; i < that._slides.length; i++ ) {
-
-		that._slides[ i ].removeAttribute( 'style' );
+	for( var i = 0; i < this._slides.length; i++ ) {
+		this._slides[ i ].removeAttribute( 'style' );
 	}
 
-	that._wrap.removeAttribute( 'style' );
-	that._element.removeAttribute( 'style' );
+	this._wrap.removeAttribute( 'style' );
+	this._element.removeAttribute( 'style' );
 
-	that.elementWidth = that._element.offsetWidth;
-	that.slideWidth = that._firstSlide.offsetWidth;
-	that.slideHeight = that._firstSlide.offsetHeight;
-	that.amountVisible = Math.round( that.elementWidth / that.slideWidth );
+	this.elementWidth = this._element.offsetWidth;
+	this.slideWidth = this._firstSlide.offsetWidth;
+	this.slideHeight = this._firstSlide.offsetHeight;
 
-	that.totalWidth = ( that.amountOfSlides * that.slideWidth );
+	this.amountVisible = Math.round( this.elementWidth / this.slideWidth );
 
-	that._wrap.style.width = that.elementWidth + 'px';
-	that._wrap.style.position = 'relative';
-	that._wrap.style.overflow = 'hidden';
-	that._wrap.style.height = that.slideHeight + 'px';
+	this.totalWidth = ( this.amountOfSlides * this.slideWidth );
 
-	that._element.style.width = that.totalWidth + 'px';
+	this._wrap.style.width = this.elementWidth + 'px';
+	this._wrap.style.position = 'relative';
+	this._wrap.style.overflow = 'hidden';
+	this._wrap.style.height = this.slideHeight + 'px';
 
-	for( var i = 0; i < that._slides.length; i++ ) {
+	this._element.style.width = this.totalWidth + 'px';
 
-		that._slides[ i ].style.float = 'left';
-		that._slides[ i ].style.width = that.slideWidth + 'px';
+	for( var i = 0; i < this._slides.length; i++ ) {
+
+		this._slides[ i ].style.float = 'left';
+		this._slides[ i ].style.width = this.slideWidth + 'px';
 	}
 
-	that.refreshState();
+	this.refreshState();
 };
 
 Carousel.prototype.refreshState = function() {
 
-	for( var i = 0; i < this._slides.length; i++ ) {
+	var translateX = Math.max( -( this.activeSlideIndex * this.slideWidth ), -( this.totalWidth - this.elementWidth ) );
+	translateX = Math.min( 0, translateX );
 
+	this.setTranslateX( translateX );
+
+	for( var i = 0; i < this._slides.length; i++ ) {
 		this._slides[ i ].classList.remove( this.options.activeSlideClass );
 	}
 
@@ -467,15 +473,15 @@ Carousel.prototype.refreshButtons = function() {
 
 	if( this.options.arrowButtons ) {
 
-		this._prevButton.classList.remove( 'hide' );
-		this._nextButton.classList.remove( 'hide' );
+		this._prevButton.classList.remove('hide');
+		this._nextButton.classList.remove('hide');
 
 		if( this.isOnLeftEdge ) {
-			this._prevButton.classList.add( 'hide' );
+			this._prevButton.classList.add('hide');
 		}
 
 		if( this.isOnRightEdge ) {
-			this._nextButton.classList.add( 'hide' );
+			this._nextButton.classList.add('hide');
 		}
 	}
 };
@@ -495,11 +501,6 @@ Carousel.prototype.goTo = function( n ) {
 	if( n >= 0 && n < this.amountOfSlides ) {
 
 		this.activeSlideIndex = n;
-
-		var translateX = Math.max( -( this.activeSlideIndex * this.slideWidth ), -( this.totalWidth - this.elementWidth ) );
-		translateX = Math.min( 0, translateX );
-
-		this.setTranslateX( translateX );
 		this.refreshState();
 	}
 

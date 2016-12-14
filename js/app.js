@@ -2,20 +2,15 @@
 
 var Carousel = require( '../src/Carousel.js' );
 
-var carousel;
-
-setTimeout( function() {
-
-	carousel = new Carousel( document.querySelector( '.carousel' ), {
-		mouseSwipe: true
-	} );
-
-}, 5000 );
-
-window.addEventListener( 'resize', function() {
-	console.log('resizing');
+var carousel = new Carousel( document.querySelector( '.carousel' ), {
+	mouseSwipe: true
 } );
 
 setTimeout( function() {
-	carousel.destroy();
-}, 10000 );
+
+	var li = document.getElementById('recalc');
+	li.classList.add('changed');
+
+	carousel.refresh();
+
+}, 1000 );

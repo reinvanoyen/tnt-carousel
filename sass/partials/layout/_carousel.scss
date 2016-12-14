@@ -7,7 +7,7 @@
 	{
 		display: block;
 		width: 100%;
-		background-color: #f0f0f0;
+		background-color: blue;
 
 		>img
 		{
@@ -51,4 +51,13 @@
 .carousel-next-button
 {
 	right: 0;
+}
+
+
+#recalc
+{
+	&.changed
+	{
+		height: 500px;
+	}
 }
