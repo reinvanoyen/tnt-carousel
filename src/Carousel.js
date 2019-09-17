@@ -143,9 +143,11 @@ Carousel.prototype.build = function() {
 		if( this.options.arrowButtons ) {
 
 			this._prevButton = document.createElement( 'button' );
+      this._prevButton.setAttribute('type', 'button');
 			this._prevButton.classList.add( this.options.previousArrowClass );
 			
 			this._nextButton = document.createElement( 'button' );
+      this._nextButton.setAttribute('type', 'button');
 			this._nextButton.classList.add( this.options.nextArrowClass );
 
 			if( ! this.options.arrowButtonsContainer ) {
@@ -154,8 +156,8 @@ Carousel.prototype.build = function() {
 				this._wrap.appendChild( this._nextButton );
 			} else {
 
-				this.options.arrowButtonsContainer.appendChild( this._prevButton );
-				this.options.arrowButtonsContainer.appendChild( this._nextButton );
+				this.options.arrowButtonsContainer.appendChild(this._prevButton);
+				this.options.arrowButtonsContainer.appendChild(this._nextButton);
 			}
 		}
 
@@ -216,11 +218,13 @@ Carousel.prototype.bindEvents = function() {
 	function nextArrowClick( e ) {
 		that.pause();
 		that.goToNext();
+		e.preventDefault();
 	}
 
 	function prevArrowClick( e ) {
 		that.pause();
 		that.goToPrevious();
+    e.preventDefault();
 	}
 
 	function keyDown( e ) {
